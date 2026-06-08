@@ -1,0 +1,46 @@
+<div class="min-h-[80vh] flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+  <div class="max-w-md w-full bg-white rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-gray-100 p-8 text-center relative overflow-hidden">
+    
+    @if (isVerifying) {
+      <div class="flex flex-col items-center justify-center space-y-4">
+        <div class="relative w-20 h-20">
+          <div class="absolute inset-0 rounded-full border-4 border-gray-100"></div>
+          <div class="absolute inset-0 rounded-full border-4 border-[#635BFF] border-t-transparent animate-spin"></div>
+        </div>
+        <h2 class="text-2xl font-black text-gray-900">Verificando Pago</h2>
+        <p class="text-gray-500 font-medium">Estamos confirmando tu transacción con Stripe...</p>
+      </div>
+    }
+
+    @if (!isVerifying && success) {
+      <div class="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-emerald-400 to-emerald-600"></div>
+      <div class="w-24 h-24 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto mb-6">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-12 h-12">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" />
+        </svg>
+      </div>
+      <h2 class="text-3xl font-black text-gray-900 mb-2">¡Pago Exitoso!</h2>
+      <p class="text-gray-500 mb-8 font-medium">Tu pago ha sido procesado correctamente. Gracias por usar la plataforma.</p>
+      
+      <a [routerLink]="isSaaS ? '/dashboard/saas/mi-suscripcion' : '/dashboard/mis-incidentes'" class="inline-flex justify-center w-full bg-gray-900 hover:bg-gray-800 text-white font-bold py-3.5 px-4 rounded-xl transition-colors shadow-md">
+        {{ isSaaS ? 'Ver mi Suscripción' : 'Volver a Mis Incidentes' }}
+      </a>
+    }
+
+    @if (!isVerifying && !success) {
+      <div class="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-red-400 to-red-600"></div>
+      <div class="w-24 h-24 bg-red-100 text-red-600 rounded-full flex items-center justify-center mx-auto mb-6">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-12 h-12">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+        </svg>
+      </div>
+      <h2 class="text-3xl font-black text-gray-900 mb-2">Error de Pago</h2>
+      <p class="text-red-500 mb-8 font-medium">{{ errorMsg }}</p>
+      
+      <a [routerLink]="isSaaS ? '/dashboard/saas/mi-suscripcion' : '/dashboard/mis-incidentes'" class="inline-flex justify-center w-full bg-gray-100 hover:bg-gray-200 text-gray-900 font-bold py-3.5 px-4 rounded-xl transition-colors">
+        Regresar
+      </a>
+    }
+
+  </div>
+</div>

@@ -1,0 +1,631 @@
+<div style="min-height:100vh; background:#0f172a; display:flex;">
+
+  <!-- ═══════════ SIDEBAR ═══════════ -->
+  <aside style="width:220px; flex-shrink:0; background:#0f172a;
+                border-right:1px solid rgba(255,255,255,0.07);
+                display:flex; flex-direction:column;
+                position:sticky; top:0; height:100vh; overflow-y:auto;">
+
+    <!-- Logo -->
+    <div style="padding:1.2rem 1rem 1rem; border-bottom:1px solid rgba(255,255,255,0.07);">
+      <a routerLink="/dashboard" style="display:flex; align-items:center; gap:0.55rem; text-decoration:none;">
+        <div style="width:30px; height:30px; border-radius:7px; background:#2563eb; flex-shrink:0;
+                    display:flex; align-items:center; justify-content:center;">
+          <svg width="16" height="16" fill="none" stroke="white" stroke-width="2.2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round"
+              d="M8.25 18.75a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m3 0h6m-9 0H3.375
+                 a1.125 1.125 0 01-1.125-1.125V14.25m17.25 4.5a1.5 1.5 0 01-3 0m3 0
+                 a1.5 1.5 0 00-3 0m3 0h1.125c.621 0 1.129-.504 1.09-1.124
+                 a17.902 17.902 0 00-3.213-9.193 2.056 2.056 0 00-1.58-.86H14.25
+                 M16.5 18.75h-2.25m0-11.177v-.958c0-.568-.422-1.048-.987-1.106
+                 a48.554 48.554 0 00-10.026 0 1.106 1.106 0 00-.987 1.106v7.635
+                 m12-6.677v6.677m0 4.5v-4.5m0 0h-12"/>
+          </svg>
+        </div>
+        <span style="font-weight:700; font-size:0.9rem; color:rgba(255,255,255,0.88); letter-spacing:-0.01em; line-height:1.2; word-break:break-word; max-width:140px;">
+          @if (profile()?.tenant_nombre) {
+            {{ profile()?.tenant_nombre }}
+          } @else if (role() === 'Administrador') {
+            Super<br/><span style="color:#f59e0b;">Admin</span>
+          } @else {
+            Emergencias<br/><span style="color:#f59e0b;">Auto</span>
+          }
+        </span>
+      </a>
+    </div>
+
+    <!-- Nav -->
+    <nav style="padding:0.9rem 0.7rem; flex:1; display:flex; flex-direction:column; gap:0.15rem;">
+
+      <p style="font-size:0.65rem; font-weight:700; color:rgba(255,255,255,0.25);
+                text-transform:uppercase; letter-spacing:0.08em; padding:0 0.5rem; margin:0.4rem 0 0.3rem;">General</p>
+
+      <a routerLink="/dashboard" routerLinkActive="active" [routerLinkActiveOptions]="{exact:true}" class="s-link">
+        <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6A2.25 2.25 0 016 3.75h2.25A2.25 2.25 0 0110.5 6v2.25a2.25 2.25 0 01-2.25 2.25H6a2.25 2.25 0 01-2.25-2.25V6zM3.75 15.75A2.25 2.25 0 016 13.5h2.25a2.25 2.25 0 012.25 2.25V18a2.25 2.25 0 01-2.25 2.25H6A2.25 2.25 0 013.75 18v-2.25zM13.5 6a2.25 2.25 0 012.25-2.25H18A2.25 2.25 0 0120.25 6v2.25A2.25 2.25 0 0118 10.5h-2.25a2.25 2.25 0 01-2.25-2.25V6zM13.5 15.75a2.25 2.25 0 012.25-2.25H18a2.25 2.25 0 012.25 2.25V18A2.25 2.25 0 0118 20.25h-2.25A2.25 2.25 0 0113.5 18v-2.25z"/>
+        </svg>
+        Inicio
+      </a>
+
+      <a routerLink="/dashboard/perfil" routerLinkActive="active" class="s-link">
+        <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z"/>
+        </svg>
+        Mi Perfil
+      </a>
+
+      @if (hasPermiso('Ver Bitacora')) {
+        <a routerLink="/dashboard/bitacora" routerLinkActive="active" class="s-link">
+          <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z"/>
+          </svg>
+          Bitacora
+        </a>
+      }
+
+      @if (hasPermiso('Ver Operaciones')) {
+        <p style="font-size:0.65rem; font-weight:700; color:rgba(255,255,255,0.25);
+                  text-transform:uppercase; letter-spacing:0.08em; padding:0 0.5rem; margin:0.9rem 0 0.3rem;">Operaciones</p>
+        <a routerLink="/dashboard/solicitudes-pendientes" routerLinkActive="active" class="s-link">
+          <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z"/>
+          </svg>
+          Solicitudes
+        </a>
+        <a routerLink="/dashboard/mantenimientos" routerLinkActive="active" class="s-link">
+          <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M11.42 15.17L17.25 21A2.652 2.652 0 0021 17.25l-5.877-5.877M11.42 15.17l2.496-3.03c.317-.384.74-.626 1.208-.766M11.42 15.17l-4.673 4.673a2.25 2.25 0 01-3.182 0l-1.06-1.06a2.25 2.25 0 010-3.182l4.673-4.673"/>
+          </svg>
+          Mantenimientos
+        </a>
+      }
+
+      @if (hasPermiso('Gestionar Mecanicos')) {
+        <a routerLink="/dashboard/mecanicos" routerLinkActive="active" class="s-link">
+          <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z"/>
+          </svg>
+          Personal Tecnico
+        </a>
+        }
+        @if (hasPermiso('Ver Reportes')) {
+        <a routerLink="/dashboard/reportes" routerLinkActive="active" class="s-link">
+          <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M7.5 14.25v2.25m3-4.5v4.5m3-6.75v6.75m3-9v9M6 20.25h12A2.25 2.25 0 0020.25 18V6A2.25 2.25 0 0018 3.75H6A2.25 2.25 0 003.75 6v12A2.25 2.25 0 006 20.25z"/>
+          </svg>
+          Reportes
+        </a>
+      }
+
+      @if (hasPermiso('Ver Usuarios')) {
+        <p style="font-size:0.65rem; font-weight:700; color:rgba(255,255,255,0.25);
+                  text-transform:uppercase; letter-spacing:0.08em; padding:0 0.5rem; margin:0.9rem 0 0.3rem;">Administracion</p>
+        <a routerLink="/dashboard/usuarios" routerLinkActive="active" class="s-link">
+          <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M15 19.128a9.38 9.38 0 002.625.372 9.337 9.337 0 004.121-.952 4.125 4.125 0 00-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 018.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0111.964-3.07M12 6.375a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zm8.25 2.25a2.625 2.625 0 11-5.25 0 2.625 2.625 0 015.25 0z"/>
+          </svg>
+          Usuarios
+        </a>
+      }
+
+      @if (role() === 'Admin Tenant') {
+        <a routerLink="/dashboard/sucursales" routerLinkActive="active" class="s-link">
+          <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
+          </svg>
+          Sucursales
+        </a>
+      }
+
+      @if (hasPermiso('Gestionar Roles')) {
+        <a routerLink="/dashboard/roles" routerLinkActive="active" class="s-link">
+          <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z"/>
+          </svg>
+          Roles y Permisos
+        </a>
+      }
+
+      @if (hasPermiso('Gestionar Tenants') || hasPermiso('Gestionar Planes')) {
+        <p style="font-size:0.65rem; font-weight:700; color:rgba(255,255,255,0.25);
+                  text-transform:uppercase; letter-spacing:0.08em; padding:0 0.5rem; margin:0.9rem 0 0.3rem;">SaaS (Global)</p>
+        <a routerLink="/dashboard/saas/tenants" routerLinkActive="active" class="s-link">
+          <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 21h19.5m-18-18v18m10.5-18v18m6-13.5V21M6.75 6.75h.75m-.75 3h.75m-.75 3h.75m3-6h.75m-.75 3h.75m-.75 3h.75M6.75 21v-3.375c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21M3 3h12m-.75 4.5H21"/>
+          </svg>
+          Organizaciones
+        </a>
+        }
+        @if (hasPermiso('Gestionar Planes')) {
+        <a routerLink="/dashboard/saas/planes" routerLinkActive="active" class="s-link">
+          <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v12m-3-2.818l.879.659c1.171.879 3.07.879 4.242 0 1.172-.879 1.172-2.303 0-3.182C13.536 12.219 12.768 12 12 12c-.725 0-1.45-.22-2.003-.659-1.106-.879-1.106-2.303 0-3.182s2.9-.879 4.006 0l.415.33M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+          </svg>
+           Planes
+        </a>
+      }
+
+      @if (role() === 'Admin Tenant') {
+        <p style="font-size:0.65rem; font-weight:700; color:rgba(255,255,255,0.25);
+                  text-transform:uppercase; letter-spacing:0.08em; padding:0 0.5rem; margin:0.9rem 0 0.3rem;">Mi Suscripción</p>
+        <a routerLink="/dashboard/saas/mi-suscripcion" routerLinkActive="active" class="s-link">
+          <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v12m-3-2.818l.879.659c1.171.879 3.07.879 4.242 0 1.172-.879 1.172-2.303 0-3.182C13.536 12.219 12.768 12 12 12c-.725 0-1.45-.22-2.003-.659-1.106-.879-1.106-2.303 0-3.182s2.9-.879 4.006 0l.415.33M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+          </svg>
+          Suscripción SaaS
+        </a>
+      }
+
+      @if (hasPermiso('Ver Analytics')) {
+        <a routerLink="/dashboard/analytics/kpis" routerLinkActive="active" class="s-link">
+          <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 013 19.875v-6.75zM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V8.625zM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V4.125z"/>
+          </svg>
+          Analytics
+        </a>
+      }
+
+    </nav>
+
+    <!-- User footer -->
+    <div style="padding:0.8rem 0.7rem; border-top:1px solid rgba(255,255,255,0.07);">
+      <a routerLink="/dashboard/perfil" style="display:flex; align-items:center; gap:0.6rem; margin-bottom:0.5rem;
+                  padding:0.5rem 0.6rem; border-radius:8px; background:rgba(255,255,255,0.04);
+                  text-decoration:none; transition:background 0.15s;"
+         onmouseover="this.style.background='rgba(255,255,255,0.08)'"
+         onmouseout="this.style.background='rgba(255,255,255,0.04)'">
+        <!-- Avatar pequeño en sidebar -->
+        <div style="width:28px;height:28px;border-radius:50%;flex-shrink:0;overflow:hidden;
+                    border:1px solid rgba(255,255,255,0.1);">
+          @if (profile()?.FotoPerfil) {
+            <img [src]="apiUrl + '/' + profile()!.FotoPerfil"
+                 alt="avatar"
+                 style="width:100%;height:100%;object-fit:cover;">
+          } @else {
+            <div style="width:100%;height:100%;background:#2563eb;display:flex;
+                        align-items:center;justify-content:center;
+                        font-size:0.7rem;font-weight:800;color:white;">
+              {{ (profile()?.Correo || role() || 'U').charAt(0).toUpperCase() }}
+            </div>
+          }
+        </div>
+        <div style="overflow:hidden;">
+          <div style="font-size:0.75rem; font-weight:600; color:rgba(255,255,255,0.75);
+                      white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
+            {{ profile()?.Correo || role() || 'Usuario' }}
+          </div>
+          <div style="font-size:0.65rem; color:rgba(255,255,255,0.3);">Sesion activa</div>
+        </div>
+      </a>
+      <button (click)="logout()" class="s-link" style="color:rgba(239,68,68,0.65);"
+              onmouseover="this.style.background='rgba(239,68,68,0.08)'; this.style.color='#f87171';"
+              onmouseout="this.style.background='transparent'; this.style.color='rgba(239,68,68,0.65)';">
+        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15M12 9l-3 3m0 0l3 3m-3-3h12.75"/>
+        </svg>
+        Cerrar sesion
+      </button>
+    </div>
+  </aside>
+
+  <!-- ═══════════ MAIN ═══════════ -->
+  <div style="flex:1; display:flex; flex-direction:column; min-width:0;">
+
+    <!-- Topbar -->
+    <header style="height:56px; border-bottom:1px solid rgba(255,255,255,0.07);
+                   display:flex; align-items:center; justify-content:space-between;
+                   padding:0 1.8rem; flex-shrink:0; background:#0f172a;
+                   position:sticky; top:0; z-index:20;">
+      <div style="font-size:0.82rem; font-weight:500; color:rgba(255,255,255,0.35);">Panel de control</div>
+      <div style="display:flex; align-items:center; gap:0.6rem;">
+        <span style="display:inline-flex; align-items:center; gap:0.4rem;
+                     background:rgba(37,99,235,0.15); border:1px solid rgba(37,99,235,0.25);
+                     border-radius:9999px; padding:0.22rem 0.75rem;
+                     font-size:0.73rem; font-weight:600; color:#60a5fa;">
+          <span style="width:6px;height:6px;border-radius:50%;background:#22c55e;display:inline-block;"></span>
+          {{ role() || 'Usuario' }}
+        </span>
+        <a routerLink="/dashboard/perfil"
+           style="width:30px;height:30px;border-radius:50%;
+                  border:1px solid rgba(255,255,255,0.1);display:flex;align-items:center;
+                  justify-content:center;text-decoration:none;transition:all 0.15s;
+                  overflow:hidden;flex-shrink:0;"
+           onmouseover="this.style.borderColor='rgba(255,255,255,0.25)'"
+           onmouseout="this.style.borderColor='rgba(255,255,255,0.1)'">
+          @if (profile()?.FotoPerfil) {
+            <img [src]="apiUrl + '/' + profile()!.FotoPerfil"
+                 alt="avatar"
+                 style="width:100%;height:100%;object-fit:cover;border-radius:50%;">
+          } @else {
+            <div style="width:100%;height:100%;background:#2563eb;display:flex;
+                        align-items:center;justify-content:center;
+                        font-size:0.72rem;font-weight:800;color:white;">
+              {{ (profile()?.Correo || role() || 'U').charAt(0).toUpperCase() }}
+            </div>
+          }
+        </a>
+      </div>
+    </header>
+
+    <!-- Content -->
+    <main style="flex:1; padding:1.8rem; overflow-y:auto; min-width:0;">
+
+      @if (isHomePage()) {
+
+        @if (hasPermiso('Ver Operaciones')) {
+          <!-- GREETING -->
+          <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:1rem; margin-bottom:1.6rem;">
+            <div>
+              <h1 style="font-size:1.5rem; font-weight:800; color:rgba(255,255,255,0.92); letter-spacing:-0.03em; margin:0 0 0.25rem;">
+                Hola, {{ role() || 'Usuario' }} 👋
+              </h1>
+              <p style="font-size:0.85rem; color:rgba(255,255,255,0.4); margin:0;">Hoy es un buen dia para optimizar tu operacion.</p>
+            </div>
+            @if (hasPermiso('Ver Operaciones') && role() !== 'Mecanico') {
+              <a routerLink="/dashboard/solicitudes-pendientes"
+                 style="display:inline-flex; align-items:center; gap:0.45rem;
+                        background:#2563eb; color:white; font-size:0.82rem; font-weight:700;
+                        padding:0.52rem 1rem; border-radius:8px; text-decoration:none;
+                        box-shadow:0 4px 14px rgba(37,99,235,0.35);">
+                <svg width="13" height="13" fill="none" stroke="white" stroke-width="2.5" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/>
+                </svg>
+                Ver solicitudes
+              </a>
+            }
+          </div>
+        } @else if (role() === 'Administrador' || hasPermiso('Gestionar Tenants')) {
+          <div style="text-align:center; margin-top:3rem;">
+            <div style="width:60px; height:60px; border-radius:14px; background:rgba(37,99,235,0.15);
+                        display:inline-flex; align-items:center; justify-content:center; margin-bottom:1.5rem;">
+              <svg width="28" height="28" fill="none" stroke="#60a5fa" stroke-width="2.2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 21v-8.25M15.75 21v-8.25M8.25 21v-8.25M3 9l9-6 9 6m-1.5 12V10.332A48.36 48.36 0 0012 9.75c-2.551 0-5.056.2-7.5.582V21M3 21h18M12 6.75h.008v.008H12V6.75z"/>
+              </svg>
+            </div>
+            <h1 style="font-size:1.8rem; font-weight:800; color:rgba(255,255,255,0.92); letter-spacing:-0.03em; margin:0 0 0.5rem;">
+              Panel de Super Administración
+            </h1>
+            <p style="font-size:0.95rem; color:rgba(255,255,255,0.5); max-width:500px; margin:0 auto 2rem;">
+              Desde este portal puedes gestionar la plataforma global, incluyendo inquilinos (Tenants), roles, usuarios y planes SaaS.
+            </p>
+            <div style="display:flex; gap:1rem; justify-content:center;">
+              <a routerLink="/dashboard/saas/tenants" style="background:#2563eb; color:white; padding:0.6rem 1.2rem; border-radius:8px; font-weight:600; text-decoration:none;">Gestionar Tenants</a>
+              <a routerLink="/dashboard/saas/planes" style="background:rgba(255,255,255,0.1); color:white; padding:0.6rem 1.2rem; border-radius:8px; font-weight:600; text-decoration:none;">Ver Planes SaaS</a>
+            </div>
+          </div>
+        }
+
+        @if (hasPermiso('Ver Analytics')) {
+          <!-- KPI CARDS -->
+          @if (kpis()) {
+            <div style="display:grid; grid-template-columns:repeat(5,1fr); gap:0.85rem; margin-bottom:1.6rem;">
+
+              <div class="kpi-card">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.8rem;">
+                  <span style="font-size:0.7rem; font-weight:700; color:rgba(255,255,255,0.38); text-transform:uppercase; letter-spacing:0.07em;">Incidentes</span>
+                  <div style="width:30px;height:30px;border-radius:8px;background:rgba(37,99,235,0.15);display:flex;align-items:center;justify-content:center;">
+                    <svg width="14" height="14" fill="none" stroke="#60a5fa" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z"/></svg>
+                  </div>
+                </div>
+                <div style="font-size:2.1rem;font-weight:900;color:rgba(255,255,255,0.92);letter-spacing:-0.04em;line-height:1;margin-bottom:0.35rem;">{{ kpis()!.total_incidentes }}</div>
+                <div style="font-size:0.72rem;color:#4ade80;font-weight:600;">Total histórico</div>
+              </div>
+
+              <div class="kpi-card">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.8rem;">
+                  <span style="font-size:0.7rem; font-weight:700; color:rgba(255,255,255,0.38); text-transform:uppercase; letter-spacing:0.07em;">T. Asignación</span>
+                  <div style="width:30px;height:30px;border-radius:8px;background:rgba(245,158,11,0.13);display:flex;align-items:center;justify-content:center;">
+                    <svg width="14" height="14" fill="none" stroke="#fbbf24" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                  </div>
+                </div>
+                <div style="font-size:2.1rem;font-weight:900;color:rgba(255,255,255,0.92);letter-spacing:-0.04em;line-height:1;margin-bottom:0.35rem;">{{ kpis()!.tiempo_promedio_asignacion_horas }} <span style="font-size:0.9rem;">h</span></div>
+                <div style="font-size:0.72rem;color:rgba(255,255,255,0.35);font-weight:500;">Promedio</div>
+              </div>
+
+              <div class="kpi-card">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.8rem;">
+                  <span style="font-size:0.7rem; font-weight:700; color:rgba(255,255,255,0.38); text-transform:uppercase; letter-spacing:0.07em;">T. Llegada</span>
+                  <div style="width:30px;height:30px;border-radius:8px;background:rgba(34,197,94,0.13);display:flex;align-items:center;justify-content:center;">
+                    <svg width="14" height="14" fill="none" stroke="#4ade80" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                  </div>
+                </div>
+                <div style="font-size:2.1rem;font-weight:900;color:rgba(255,255,255,0.92);letter-spacing:-0.04em;line-height:1;margin-bottom:0.35rem;">{{ kpis()!.tiempo_promedio_llegada_horas }} <span style="font-size:0.9rem;">h</span></div>
+                <div style="font-size:0.72rem;color:rgba(255,255,255,0.35);font-weight:500;">Promedio</div>
+              </div>
+
+              <div class="kpi-card">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.8rem;">
+                  <span style="font-size:0.7rem; font-weight:700; color:rgba(255,255,255,0.38); text-transform:uppercase; letter-spacing:0.07em;">Cancelados</span>
+                  <div style="width:30px;height:30px;border-radius:8px;background:rgba(239,68,68,0.13);display:flex;align-items:center;justify-content:center;">
+                    <svg width="14" height="14" fill="none" stroke="#f87171" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z"/></svg>
+                  </div>
+                </div>
+                <div style="font-size:2.1rem;font-weight:900;color:rgba(255,255,255,0.92);letter-spacing:-0.04em;line-height:1;margin-bottom:0.35rem;">{{ kpis()!.tasa_cancelados_porcentaje }}%</div>
+                <div style="font-size:0.72rem;color:#f87171;font-weight:600;">Casos sin atender</div>
+              </div>
+
+              <div class="kpi-card">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.8rem;">
+                  <span style="font-size:0.7rem; font-weight:700; color:rgba(255,255,255,0.38); text-transform:uppercase; letter-spacing:0.07em;">Cumplimiento SLA</span>
+                  <div style="width:30px;height:30px;border-radius:8px;background:rgba(168,85,247,0.13);display:flex;align-items:center;justify-content:center;">
+                    <svg width="14" height="14" fill="none" stroke="#a855f7" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                  </div>
+                </div>
+                <div style="font-size:2.1rem;font-weight:900;color:rgba(255,255,255,0.92);letter-spacing:-0.04em;line-height:1;margin-bottom:0.35rem;">{{ kpis()!.cumplimiento_sla_porcentaje }}%</div>
+                <div style="font-size:0.72rem;color:#a855f7;font-weight:600;">En tiempo esperado</div>
+              </div>
+
+            </div>
+
+            <!-- Tablas y Listas -->
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem; margin-bottom:1.6rem;">
+              
+              <div class="kpi-card" style="padding:1.3rem;">
+                <h3 style="font-size:0.88rem;font-weight:700;color:rgba(255,255,255,0.85);margin:0 0 1rem;">Incidentes por Tipo</h3>
+                <div style="display:flex;flex-direction:column;gap:0.8rem;">
+                  @for (tipo of kpis()!.incidentes_por_tipo | keyvalue; track tipo.key) {
+                    <div>
+                      <div style="display:flex;justify-content:space-between;font-size:0.78rem;color:rgba(255,255,255,0.8);margin-bottom:0.3rem;">
+                        <span>{{ tipo.key }}</span>
+                        <span style="font-weight:700;">{{ tipo.value }}</span>
+                      </div>
+                      <div style="height:6px;background:rgba(255,255,255,0.1);border-radius:3px;overflow:hidden;">
+                        <div style="height:100%;background:#3b82f6;" [style.width.%]="(tipo.value / kpis()!.total_incidentes) * 100"></div>
+                      </div>
+                    </div>
+                  }
+                </div>
+              </div>
+
+              <div class="kpi-card" style="padding:1.3rem;">
+                <h3 style="font-size:0.88rem;font-weight:700;color:rgba(255,255,255,0.85);margin:0 0 1rem;">Zonas con más Incidentes</h3>
+                <div style="display:flex;flex-direction:column;gap:0.8rem;">
+                  @for (zona of kpis()!.zonas_con_mas_incidentes | keyvalue; track zona.key) {
+                    <div style="display:flex;align-items:center;justify-content:space-between;padding:0.5rem;background:rgba(255,255,255,0.03);border-radius:6px;">
+                      <div style="display:flex;align-items:center;gap:0.5rem;">
+                        <svg width="14" height="14" fill="none" stroke="#f87171" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z" /><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z" /></svg>
+                        <span style="font-size:0.75rem;color:rgba(255,255,255,0.75);">Geo: {{ zona.key }}</span>
+                      </div>
+                      <span style="font-size:0.75rem;font-weight:700;color:white;background:#f87171;padding:0.1rem 0.4rem;border-radius:12px;">{{ zona.value }}</span>
+                    </div>
+                  }
+                </div>
+              </div>
+
+            </div>
+
+          } @else if (isLoadingKpis()) {
+            <div style="text-align:center; padding:3rem 0;">
+              <div class="spinner" style="width:40px;height:40px;border:3px solid rgba(255,255,255,0.1);border-top-color:#3b82f6;border-radius:50%;animation:spin 1s linear infinite;margin:0 auto 1rem;"></div>
+              <p style="color:rgba(255,255,255,0.5);font-size:0.9rem;">Cargando analíticas operacionales...</p>
+            </div>
+          }
+
+        <!-- MIDDLE ROW -->
+        <div style="display:grid; grid-template-columns:1fr 1fr 240px; gap:1rem; margin-bottom:1.6rem; min-width:0;">
+
+          <!-- Bar chart -->
+          <div class="kpi-card" style="padding:1.3rem;">
+            <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:1.2rem;">
+              <div>
+                <h3 style="font-size:0.88rem;font-weight:700;color:rgba(255,255,255,0.85);margin:0 0 0.15rem;">Servicios esta semana</h3>
+                <p style="font-size:0.75rem;color:rgba(255,255,255,0.35);margin:0;">Incidentes atendidos por dia</p>
+              </div>
+              <span style="font-size:0.72rem;font-weight:700;color:#4ade80;background:rgba(34,197,94,0.12);border-radius:6px;padding:0.2rem 0.55rem;">+18%</span>
+            </div>
+            <svg viewBox="0 0 260 110" style="width:100%; height:110px; overflow:visible;">
+              <line x1="0" y1="10"  x2="260" y2="10"  stroke="rgba(255,255,255,0.05)" stroke-width="1"/>
+              <line x1="0" y1="37"  x2="260" y2="37"  stroke="rgba(255,255,255,0.05)" stroke-width="1"/>
+              <line x1="0" y1="64"  x2="260" y2="64"  stroke="rgba(255,255,255,0.05)" stroke-width="1"/>
+              <line x1="0" y1="91"  x2="260" y2="91"  stroke="rgba(255,255,255,0.05)" stroke-width="1"/>
+              <text x="13"  y="108" fill="rgba(255,255,255,0.3)" font-size="9" text-anchor="middle">Lun</text>
+              <text x="50"  y="108" fill="rgba(255,255,255,0.3)" font-size="9" text-anchor="middle">Mar</text>
+              <text x="87"  y="108" fill="rgba(255,255,255,0.3)" font-size="9" text-anchor="middle">Mie</text>
+              <text x="124" y="108" fill="rgba(255,255,255,0.3)" font-size="9" text-anchor="middle">Jue</text>
+              <text x="161" y="108" fill="rgba(255,255,255,0.3)" font-size="9" text-anchor="middle">Vie</text>
+              <text x="198" y="108" fill="rgba(255,255,255,0.3)" font-size="9" text-anchor="middle">Sab</text>
+              <text x="235" y="108" fill="rgba(255,255,255,0.3)" font-size="9" text-anchor="middle">Dom</text>
+              <rect class="bar" x="3"   y="37" width="20" height="54" fill="rgba(37,99,235,0.45)" rx="3"/>
+              <rect class="bar" x="40"  y="46" width="20" height="45" fill="rgba(37,99,235,0.45)" rx="3"/>
+              <rect class="bar" x="77"  y="10" width="20" height="81" fill="#2563eb" rx="3"/>
+              <rect class="bar" x="114" y="28" width="20" height="63" fill="rgba(37,99,235,0.45)" rx="3"/>
+              <rect class="bar" x="151" y="55" width="20" height="36" fill="rgba(37,99,235,0.45)" rx="3"/>
+              <rect class="bar" x="188" y="64" width="20" height="27" fill="rgba(37,99,235,0.3)"  rx="3"/>
+              <rect class="bar" x="225" y="73" width="20" height="18" fill="rgba(37,99,235,0.25)" rx="3"/>
+              <rect x="63" y="2" width="52" height="18" fill="#1e40af" rx="4"/>
+              <text x="89" y="14" fill="white" font-size="8.5" text-anchor="middle" font-weight="700">9 servicios</text>
+            </svg>
+          </div>
+
+          <!-- Activity feed -->
+          <div class="kpi-card" style="padding:1.3rem;">
+            <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:1rem;">
+              <h3 style="font-size:0.88rem;font-weight:700;color:rgba(255,255,255,0.85);margin:0;">Actividad reciente</h3>
+              <a routerLink="/dashboard/bitacora" style="font-size:0.73rem;color:#60a5fa;text-decoration:none;font-weight:500;">Ver todo</a>
+            </div>
+
+            <div style="display:flex;align-items:flex-start;gap:0.7rem;padding:0.6rem 0;border-bottom:1px solid rgba(255,255,255,0.05);">
+              <div style="width:7px;height:7px;border-radius:50%;background:#f87171;margin-top:5px;flex-shrink:0;"></div>
+              <div style="flex:1;min-width:0;">
+                <p style="font-size:0.8rem;font-weight:600;color:rgba(255,255,255,0.75);margin:0 0 0.1rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">Emergencia reportada — Zona Norte</p>
+                <p style="font-size:0.72rem;color:rgba(255,255,255,0.3);margin:0;">hace 5 min</p>
+              </div>
+              <span class="badge badge-red">Activo</span>
+            </div>
+
+            <div style="display:flex;align-items:flex-start;gap:0.7rem;padding:0.6rem 0;border-bottom:1px solid rgba(255,255,255,0.05);">
+              <div style="width:7px;height:7px;border-radius:50%;background:#fbbf24;margin-top:5px;flex-shrink:0;"></div>
+              <div style="flex:1;min-width:0;">
+                <p style="font-size:0.8rem;font-weight:600;color:rgba(255,255,255,0.75);margin:0 0 0.1rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">Mecanico asignado — Juan Perez</p>
+                <p style="font-size:0.72rem;color:rgba(255,255,255,0.3);margin:0;">hace 12 min</p>
+              </div>
+              <span class="badge badge-amber">En camino</span>
+            </div>
+
+            <div style="display:flex;align-items:flex-start;gap:0.7rem;padding:0.6rem 0;border-bottom:1px solid rgba(255,255,255,0.05);">
+              <div style="width:7px;height:7px;border-radius:50%;background:#4ade80;margin-top:5px;flex-shrink:0;"></div>
+              <div style="flex:1;min-width:0;">
+                <p style="font-size:0.8rem;font-weight:600;color:rgba(255,255,255,0.75);margin:0 0 0.1rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">Servicio completado — Reparacion menor</p>
+                <p style="font-size:0.72rem;color:rgba(255,255,255,0.3);margin:0;">hace 34 min</p>
+              </div>
+              <span class="badge badge-green">Listo</span>
+            </div>
+
+            <div style="display:flex;align-items:flex-start;gap:0.7rem;padding:0.6rem 0;border-bottom:1px solid rgba(255,255,255,0.05);">
+              <div style="width:7px;height:7px;border-radius:50%;background:#60a5fa;margin-top:5px;flex-shrink:0;"></div>
+              <div style="flex:1;min-width:0;">
+                <p style="font-size:0.8rem;font-weight:600;color:rgba(255,255,255,0.75);margin:0 0 0.1rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">Pago recibido — $85.00</p>
+                <p style="font-size:0.72rem;color:rgba(255,255,255,0.3);margin:0;">hace 1 hora</p>
+              </div>
+              <span class="badge badge-blue">Pagado</span>
+            </div>
+
+            <div style="display:flex;align-items:flex-start;gap:0.7rem;padding:0.6rem 0;">
+              <div style="width:7px;height:7px;border-radius:50%;background:#4ade80;margin-top:5px;flex-shrink:0;"></div>
+              <div style="flex:1;min-width:0;">
+                <p style="font-size:0.8rem;font-weight:600;color:rgba(255,255,255,0.75);margin:0 0 0.1rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">Nuevo mecanico — Carlos Rojas</p>
+                <p style="font-size:0.72rem;color:rgba(255,255,255,0.3);margin:0;">hace 2 horas</p>
+              </div>
+              <span class="badge badge-green">Nuevo</span>
+            </div>
+
+          </div>
+
+          <!-- System status + quick access -->
+          <div style="display:flex;flex-direction:column;gap:1rem;">
+
+            <div class="kpi-card" style="padding:1.15rem;">
+              <h3 style="font-size:0.83rem;font-weight:700;color:rgba(255,255,255,0.8);margin:0 0 0.9rem;">Estado del sistema</h3>
+              <div style="display:flex;flex-direction:column;gap:0.55rem;">
+                <div style="display:flex;justify-content:space-between;align-items:center;">
+                  <span style="font-size:0.77rem;color:rgba(255,255,255,0.42);">API Backend</span>
+                  <span style="display:flex;align-items:center;gap:0.3rem;font-size:0.72rem;font-weight:700;color:#4ade80;"><span style="width:5px;height:5px;border-radius:50%;background:#4ade80;display:inline-block;"></span>OK</span>
+                </div>
+                <div style="display:flex;justify-content:space-between;align-items:center;">
+                  <span style="font-size:0.77rem;color:rgba(255,255,255,0.42);">WebSockets</span>
+                  <span style="display:flex;align-items:center;gap:0.3rem;font-size:0.72rem;font-weight:700;color:#4ade80;"><span style="width:5px;height:5px;border-radius:50%;background:#4ade80;display:inline-block;"></span>OK</span>
+                </div>
+                <div style="display:flex;justify-content:space-between;align-items:center;">
+                  <span style="font-size:0.77rem;color:rgba(255,255,255,0.42);">Pagos</span>
+                  <span style="display:flex;align-items:center;gap:0.3rem;font-size:0.72rem;font-weight:700;color:#4ade80;"><span style="width:5px;height:5px;border-radius:50%;background:#4ade80;display:inline-block;"></span>OK</span>
+                </div>
+                <div style="display:flex;justify-content:space-between;align-items:center;">
+                  <span style="font-size:0.77rem;color:rgba(255,255,255,0.42);">GPS</span>
+                  <span style="display:flex;align-items:center;gap:0.3rem;font-size:0.72rem;font-weight:700;color:#4ade80;"><span style="width:5px;height:5px;border-radius:50%;background:#4ade80;display:inline-block;"></span>OK</span>
+                </div>
+                <div style="display:flex;justify-content:space-between;align-items:center;">
+                  <span style="font-size:0.77rem;color:rgba(255,255,255,0.42);">PWA Sync</span>
+                  <span style="display:flex;align-items:center;gap:0.3rem;font-size:0.72rem;font-weight:700;color:#fbbf24;"><span style="width:5px;height:5px;border-radius:50%;background:#fbbf24;display:inline-block;"></span>Standby</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="kpi-card" style="padding:1.15rem;">
+              <h3 style="font-size:0.83rem;font-weight:700;color:rgba(255,255,255,0.8);margin:0 0 0.75rem;">Acceso rapido</h3>
+              <div style="display:flex;flex-direction:column;gap:0.4rem;">
+                @if (hasPermiso('Ver Operaciones') && role() !== 'Mecanico') {
+                  <a routerLink="/dashboard/solicitudes-pendientes"
+                     style="display:flex;align-items:center;gap:0.5rem;padding:0.48rem 0.6rem;
+                            border-radius:7px;text-decoration:none;
+                            background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.18);"
+                     onmouseover="this.style.background='rgba(239,68,68,0.18)'"
+                     onmouseout="this.style.background='rgba(239,68,68,0.1)'">
+                    <svg width="12" height="12" fill="none" stroke="#f87171" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z"/></svg>
+                    <span style="font-size:0.77rem;font-weight:600;color:#f87171;">Solicitudes urgentes</span>
+                  </a>
+                }
+                <a routerLink="/dashboard/mantenimientos"
+                   style="display:flex;align-items:center;gap:0.5rem;padding:0.48rem 0.6rem;
+                          border-radius:7px;text-decoration:none;background:rgba(255,255,255,0.04);"
+                   onmouseover="this.style.background='rgba(255,255,255,0.08)'"
+                   onmouseout="this.style.background='rgba(255,255,255,0.04)'">
+                  <svg width="12" height="12" fill="none" stroke="rgba(255,255,255,0.4)" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M11.42 15.17L17.25 21A2.652 2.652 0 0021 17.25l-5.877-5.877M11.42 15.17l2.496-3.03c.317-.384.74-.626 1.208-.766M11.42 15.17l-4.673 4.673a2.25 2.25 0 01-3.182 0l-1.06-1.06a2.25 2.25 0 010-3.182l4.673-4.673"/></svg>
+                  <span style="font-size:0.77rem;font-weight:500;color:rgba(255,255,255,0.5);">Mantenimientos</span>
+                </a>
+                @if (hasPermiso('Ver Analytics')) {
+                  <a routerLink="/dashboard/analytics/kpis"
+                     style="display:flex;align-items:center;gap:0.5rem;padding:0.48rem 0.6rem;
+                            border-radius:7px;text-decoration:none;background:rgba(255,255,255,0.04);"
+                     onmouseover="this.style.background='rgba(255,255,255,0.08)'"
+                     onmouseout="this.style.background='rgba(255,255,255,0.04)'">
+                    <svg width="12" height="12" fill="none" stroke="rgba(255,255,255,0.4)" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M7.5 14.25v2.25m3-4.5v4.5m3-6.75v6.75m3-9v9M6 20.25h12A2.25 2.25 0 0020.25 18V6A2.25 2.25 0 0018 3.75H6A2.25 2.25 0 003.75 6v12A2.25 2.25 0 006 20.25z"/></svg>
+                    <span style="font-size:0.77rem;font-weight:500;color:rgba(255,255,255,0.5);">Analytics y KPIs</span>
+                  </a>
+                }
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+          <!-- INCIDENTS TABLE -->
+          <div class="kpi-card" style="padding:1.3rem;">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;">
+              <h3 style="font-size:0.88rem;font-weight:700;color:rgba(255,255,255,0.85);margin:0;">Incidentes recientes</h3>
+              <a routerLink="/dashboard/mantenimientos" style="font-size:0.73rem;color:#60a5fa;text-decoration:none;font-weight:500;">Ver todos</a>
+            </div>
+            <div style="overflow-x:auto;">
+              <table style="width:100%;border-collapse:collapse;font-size:0.8rem;">
+                <thead>
+                  <tr style="border-bottom:1px solid rgba(255,255,255,0.07);">
+                    <th style="text-align:left;padding:0.5rem 0.75rem;font-size:0.68rem;font-weight:700;color:rgba(255,255,255,0.3);text-transform:uppercase;letter-spacing:0.06em;">ID</th>
+                    <th style="text-align:left;padding:0.5rem 0.75rem;font-size:0.68rem;font-weight:700;color:rgba(255,255,255,0.3);text-transform:uppercase;letter-spacing:0.06em;">Tipo</th>
+                    <th style="text-align:left;padding:0.5rem 0.75rem;font-size:0.68rem;font-weight:700;color:rgba(255,255,255,0.3);text-transform:uppercase;letter-spacing:0.06em;">Conductor</th>
+                    <th style="text-align:left;padding:0.5rem 0.75rem;font-size:0.68rem;font-weight:700;color:rgba(255,255,255,0.3);text-transform:uppercase;letter-spacing:0.06em;">Mecanico</th>
+                    <th style="text-align:left;padding:0.5rem 0.75rem;font-size:0.68rem;font-weight:700;color:rgba(255,255,255,0.3);text-transform:uppercase;letter-spacing:0.06em;">ETA</th>
+                    <th style="text-align:left;padding:0.5rem 0.75rem;font-size:0.68rem;font-weight:700;color:rgba(255,255,255,0.3);text-transform:uppercase;letter-spacing:0.06em;">Estado</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr style="border-bottom:1px solid rgba(255,255,255,0.04);">
+                    <td style="padding:0.65rem 0.75rem;color:rgba(255,255,255,0.5);font-family:monospace;">#1094</td>
+                    <td style="padding:0.65rem 0.75rem;color:rgba(255,255,255,0.75);font-weight:500;">Averia mecanica</td>
+                    <td style="padding:0.65rem 0.75rem;color:rgba(255,255,255,0.5);">Maria Torres</td>
+                    <td style="padding:0.65rem 0.75rem;color:rgba(255,255,255,0.5);">Juan Perez</td>
+                    <td style="padding:0.65rem 0.75rem;color:#fbbf24;font-weight:600;">8 min</td>
+                    <td style="padding:0.65rem 0.75rem;"><span class="badge badge-red">En camino</span></td>
+                  </tr>
+                  <tr style="border-bottom:1px solid rgba(255,255,255,0.04);">
+                    <td style="padding:0.65rem 0.75rem;color:rgba(255,255,255,0.5);font-family:monospace;">#1093</td>
+                    <td style="padding:0.65rem 0.75rem;color:rgba(255,255,255,0.75);font-weight:500;">Pinchazo</td>
+                    <td style="padding:0.65rem 0.75rem;color:rgba(255,255,255,0.5);">Carlos Vega</td>
+                    <td style="padding:0.65rem 0.75rem;color:rgba(255,255,255,0.5);">Luis Rios</td>
+                    <td style="padding:0.65rem 0.75rem;color:#fbbf24;font-weight:600;">15 min</td>
+                    <td style="padding:0.65rem 0.75rem;"><span class="badge badge-amber">Asignado</span></td>
+                  </tr>
+                  <tr style="border-bottom:1px solid rgba(255,255,255,0.04);">
+                    <td style="padding:0.65rem 0.75rem;color:rgba(255,255,255,0.5);font-family:monospace;">#1092</td>
+                    <td style="padding:0.65rem 0.75rem;color:rgba(255,255,255,0.75);font-weight:500;">Bateria descargada</td>
+                    <td style="padding:0.65rem 0.75rem;color:rgba(255,255,255,0.5);">Ana Gutierrez</td>
+                    <td style="padding:0.65rem 0.75rem;color:rgba(255,255,255,0.5);">Pedro Salas</td>
+                    <td style="padding:0.65rem 0.75rem;color:rgba(255,255,255,0.3);">—</td>
+                    <td style="padding:0.65rem 0.75rem;"><span class="badge badge-green">Completado</span></td>
+                  </tr>
+                  <tr style="border-bottom:1px solid rgba(255,255,255,0.04);">
+                    <td style="padding:0.65rem 0.75rem;color:rgba(255,255,255,0.5);font-family:monospace;">#1091</td>
+                    <td style="padding:0.65rem 0.75rem;color:rgba(255,255,255,0.75);font-weight:500;">Colision leve</td>
+                    <td style="padding:0.65rem 0.75rem;color:rgba(255,255,255,0.5);">Roberto Diaz</td>
+                    <td style="padding:0.65rem 0.75rem;color:rgba(255,255,255,0.5);">Juan Perez</td>
+                    <td style="padding:0.65rem 0.75rem;color:rgba(255,255,255,0.3);">—</td>
+                    <td style="padding:0.65rem 0.75rem;"><span class="badge badge-green">Completado</span></td>
+                  </tr>
+                  <tr>
+                    <td style="padding:0.65rem 0.75rem;color:rgba(255,255,255,0.5);font-family:monospace;">#1090</td>
+                    <td style="padding:0.65rem 0.75rem;color:rgba(255,255,255,0.75);font-weight:500;">Falla de motor</td>
+                    <td style="padding:0.65rem 0.75rem;color:rgba(255,255,255,0.5);">Sofia Morales</td>
+                    <td style="padding:0.65rem 0.75rem;color:rgba(255,255,255,0.5);">Carlos Lima</td>
+                    <td style="padding:0.65rem 0.75rem;color:rgba(255,255,255,0.3);">—</td>
+                    <td style="padding:0.65rem 0.75rem;"><span class="badge badge-blue">Pagado</span></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        }
+
+      }
+
+      <router-outlet></router-outlet>
+    </main>
+  </div>
+</div>

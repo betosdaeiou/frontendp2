@@ -1,0 +1,48 @@
+<div class="p-6">
+  <div class="flex justify-between items-center mb-6">
+    <h2 class="text-2xl font-bold text-gray-800">Organizaciones SaaS</h2>
+    <button class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded shadow">
+      + Nuevo Tenant
+    </button>
+  </div>
+
+  <div *ngIf="loading" class="text-center py-10">
+    <p class="text-gray-500">Cargando tenants...</p>
+  </div>
+
+  <div *ngIf="!loading && tenants.length === 0" class="bg-yellow-50 border-l-4 border-yellow-400 p-4">
+    <div class="flex">
+      <div class="ml-3">
+        <p class="text-sm text-yellow-700">No hay organizaciones registradas.</p>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="!loading && tenants.length > 0" class="bg-white shadow overflow-hidden sm:rounded-md">
+    <ul class="divide-y divide-gray-200">
+      <li *ngFor="let tenant of tenants">
+        <div class="px-4 py-4 sm:px-6 hover:bg-gray-50 cursor-pointer transition">
+          <div class="flex items-center justify-between">
+            <p class="text-sm font-medium text-blue-600 truncate">{{ tenant.Nombre }}</p>
+            <div class="ml-2 flex-shrink-0 flex">
+              <p class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full"
+                 [ngClass]="tenant.SuscripcionActiva === 1 ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'">
+                {{ tenant.SuscripcionActiva === 1 ? 'Activa' : 'Inactiva' }}
+              </p>
+            </div>
+          </div>
+          <div class="mt-2 sm:flex sm:justify-between">
+            <div class="sm:flex">
+              <p class="flex items-center text-sm text-gray-500">
+                Dominio: {{ tenant.Dominio || 'N/A' }}
+              </p>
+            </div>
+            <div class="mt-2 flex items-center text-sm text-gray-500 sm:mt-0">
+              <p>ID: {{ tenant.Id }}</p>
+            </div>
+          </div>
+        </div>
+      </li>
+    </ul>
+  </div>
+</div>

@@ -1,0 +1,527 @@
+<div style="display:flex; flex-direction:column; gap:1.2rem;">
+
+  <!-- ── PAGE HEADER ── -->
+  <div class="card" style="padding:1.4rem 1.6rem;">
+    <div style="display:flex; align-items:center; gap:1rem;">
+
+      <!-- Avatar -->
+      <label style="cursor:pointer; display:block; position:relative; flex-shrink:0;">
+        @if (avatarUrl) {
+          <img [src]="avatarUrl" alt="avatar"
+            style="width:52px;height:52px;border-radius:10px;object-fit:cover;
+                   border:1px solid rgba(255,255,255,0.1);display:block;">
+        } @else {
+          <div style="width:52px;height:52px;border-radius:10px;background:#2563eb;
+                      display:flex;align-items:center;justify-content:center;
+                      font-size:1.4rem;font-weight:800;color:white;">
+            {{ avatarInitial }}
+          </div>
+        }
+        <!-- hover overlay -->
+        <div class="avatar-overlay">
+          @if (uploadingAvatar) {
+            <svg class="spin" width="18" height="18" fill="none" stroke="white" stroke-width="2.5" viewBox="0 0 24 24">
+              <path stroke-linecap="round" d="M12 2a10 10 0 0 1 10 10"/>
+            </svg>
+          } @else {
+            <svg width="16" height="16" fill="none" stroke="white" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M6.827 6.175A2.31 2.31 0 015.186 7.23c-.38.054-.757.112-1.134.175C2.999 7.58 2.25 8.507 2.25 9.574V18a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18V9.574c0-1.067-.75-1.994-1.802-2.169a47.865 47.865 0 00-1.134-.175 2.31 2.31 0 01-1.64-1.055l-.822-1.316a2.192 2.192 0 00-1.736-1.039 48.774 48.774 0 00-5.232 0 2.192 2.192 0 00-1.736 1.039l-.821 1.316z"/>
+              <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 12.75a4.5 4.5 0 11-9 0 4.5 4.5 0 019 0z"/>
+            </svg>
+          }
+        </div>
+        <input type="file" accept="image/*" style="display:none;" (change)="onAvatarChange($event)">
+      </label>
+
+      <div style="flex:1;">
+        <h1 style="font-size:1.3rem;font-weight:800;color:rgba(255,255,255,0.92);
+                   letter-spacing:-0.025em;margin:0 0 0.2rem;">Mi Perfil</h1>
+        <p style="font-size:0.8rem;color:rgba(255,255,255,0.38);margin:0;">
+          Gestiona tu información personal y configuración de cuenta.
+        </p>
+      </div>
+
+      @if (profile) {
+        <span class="role-badge"
+          [style.background]="roleBadgeBg"
+          [style.border]="roleBadgeBorder"
+          [style.color]="roleBadgeColor">
+          <span style="width:6px;height:6px;border-radius:50%;display:inline-block;"
+                [style.background]="roleDotColor"></span>
+          {{ profile.rol_nombre || 'Sin rol' }}
+        </span>
+      }
+    </div>
+  </div>
+
+  <!-- ── ALERTS ── -->
+  @if (successMessage) {
+    <div class="alert-success fade-in">
+      <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" style="flex-shrink:0;">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/>
+      </svg>
+      {{ successMessage }}
+    </div>
+  }
+  @if (errorMessage) {
+    <div class="alert-error fade-in">
+      <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" style="flex-shrink:0;">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z"/>
+      </svg>
+      {{ errorMessage }}
+    </div>
+  }
+
+  <!-- ── LOADING ── -->
+  @if (loading) {
+    <div style="display:flex;align-items:center;justify-content:center;padding:3rem;
+                color:rgba(255,255,255,0.35);gap:0.75rem;">
+      <svg class="spin" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+        <path stroke-linecap="round" d="M12 2a10 10 0 0 1 10 10"/>
+      </svg>
+      <span style="font-size:0.9rem;font-weight:500;">Cargando perfil...</span>
+    </div>
+  }
+
+  @if (!loading && profile) {
+
+    <!-- ── ROW 1: cuenta + perfil según rol ── -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.2rem;">
+
+      <!-- Datos de cuenta -->
+      <div class="card">
+        <div class="card-header">
+          <div class="icon-box" style="background:rgba(37,99,235,0.15);">
+            <svg width="15" height="15" fill="none" stroke="#60a5fa" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z"/>
+            </svg>
+          </div>
+          <div>
+            <div style="font-size:0.88rem;font-weight:700;color:rgba(255,255,255,0.85);">Datos de Cuenta</div>
+            <div style="font-size:0.72rem;color:rgba(255,255,255,0.3);">Correo electrónico</div>
+          </div>
+        </div>
+        <form [formGroup]="accountForm" style="padding:1.2rem;display:flex;flex-direction:column;gap:1rem;">
+          <div>
+            <label class="field-label">Correo electrónico</label>
+            <input type="email" formControlName="Correo" class="field-input" placeholder="tu@correo.com">
+          </div>
+        </form>
+      </div>
+
+      <!-- Datos del perfil según rol -->
+      <div class="card">
+        <div class="card-header">
+          <div class="icon-box" style="background:rgba(168,85,247,0.15);">
+            <svg width="15" height="15" fill="none" stroke="#c084fc" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M9.594 3.94c.09-.542.56-.94 1.11-.94h2.593c.55 0 1.02.398 1.11.94l.213 1.281c.063.374.313.686.645.87.074.04.147.083.22.127.324.196.72.257 1.075.124l1.217-.456a1.125 1.125 0 011.37.49l1.296 2.247a1.125 1.125 0 01-.26 1.431l-1.003.827c-.293.24-.438.613-.431.992a6.759 6.759 0 010 .255c-.007.378.138.75.43.99l1.005.828c.424.35.534.954.26 1.43l-1.298 2.247a1.125 1.125 0 01-1.369.491l-1.217-.456c-.355-.133-.75-.072-1.076.124a6.57 6.57 0 01-.22.128c-.331.183-.581.495-.644.869l-.214 1.281c-.09.543-.56.941-1.11.941h-2.594c-.55 0-1.02-.398-1.11-.94l-.213-1.281c-.062-.374-.312-.686-.644-.87a6.52 6.52 0 01-.22-.127c-.325-.196-.72-.257-1.076-.124l-1.217.456a1.125 1.125 0 01-1.369-.49l-1.297-2.247a1.125 1.125 0 01.26-1.431l1.004-.827c.292-.24.437-.613.43-.992a6.932 6.932 0 010-.255c.007-.378-.138-.75-.43-.99l-1.004-.828a1.125 1.125 0 01-.26-1.43l1.297-2.247a1.125 1.125 0 011.37-.491l1.216.456c.356.133.751.072 1.076-.124.072-.044.146-.087.22-.128.332-.183.582-.495.644-.869l.214-1.281z"/>
+              <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+            </svg>
+          </div>
+          <div>
+            <div style="font-size:0.88rem;font-weight:700;color:rgba(255,255,255,0.85);">Datos del Perfil</div>
+            <div style="font-size:0.72rem;color:rgba(255,255,255,0.3);">Información específica de tu rol</div>
+          </div>
+        </div>
+
+        <!-- Admin -->
+        @if (profile.rol_nombre === 'Administrador') {
+          <form [formGroup]="adminForm" style="padding:1.2rem;display:flex;flex-direction:column;gap:1rem;">
+            <div>
+              <label class="field-label">Nombre de usuario</label>
+              <input type="text" formControlName="Usuario" class="field-input" placeholder="Nombre de administrador">
+            </div>
+          </form>
+        }
+
+        <!-- Taller -->
+        @if (profile.rol_nombre === 'Taller') {
+          <div style="padding:1rem 1.2rem 0;">
+            <div style="background:linear-gradient(135deg,#1e3a6e,#1e3560);
+                        border:1px solid rgba(37,99,235,0.25);border-radius:10px;
+                        padding:1rem 1.2rem;display:flex;align-items:center;justify-content:space-between;">
+              <div>
+                <div style="font-size:0.65rem;font-weight:700;color:rgba(255,255,255,0.4);
+                            text-transform:uppercase;letter-spacing:0.07em;margin-bottom:0.3rem;">Balance Actual</div>
+                <div style="font-size:1.8rem;font-weight:900;color:rgba(255,255,255,0.92);
+                            letter-spacing:-0.03em;line-height:1;">${{ profile.taller?.balance || 0 }}</div>
+                <div style="font-size:0.68rem;color:rgba(255,255,255,0.35);margin-top:0.3rem;">
+                  @if ((profile.taller?.balance || 0) >= 0) { Monto a favor } @else { Deuda pendiente }
+                </div>
+              </div>
+              <div style="width:38px;height:38px;border-radius:50%;background:rgba(255,255,255,0.08);
+                          display:flex;align-items:center;justify-content:center;">
+                <svg width="18" height="18" fill="none" stroke="#60a5fa" stroke-width="2" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v12m-3-2.818l.879.659c1.171.879 3.07.879 4.242 0 1.172-.879 1.172-2.303 0-3.182C13.536 12.219 12.768 12 12 12c-.725 0-1.45-.22-2.003-.659-1.106-.879-1.106-2.303 0-3.182s2.9-.879 4.006 0l.415.33M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                </svg>
+              </div>
+            </div>
+          </div>
+          <form [formGroup]="tallerForm" style="padding:1rem 1.2rem;display:flex;flex-direction:column;gap:0.9rem;">
+            <div>
+              <label class="field-label">Nombre del Taller</label>
+              <input type="text" formControlName="Nombre" class="field-input">
+            </div>
+            <div>
+              <label class="field-label">Dirección</label>
+              <input type="text" formControlName="Direccion" class="field-input">
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.75rem;">
+              <div>
+                <label class="field-label">Cap. Actual</label>
+                <input type="number" formControlName="Cap" class="field-input">
+              </div>
+              <div>
+                <label class="field-label">Cap. Máxima</label>
+                <input type="number" formControlName="Capmax" class="field-input">
+              </div>
+            </div>
+            <div>
+              <label class="field-label">Coordenadas</label>
+              <input type="text" formControlName="Coordenadas" class="field-input" readonly
+                placeholder="Selecciona en el mapa">
+            </div>
+          </form>
+        }
+
+        <!-- Conductor -->
+        @if (profile.rol_nombre === 'Conductor') {
+          <form [formGroup]="conductorForm" style="padding:1.2rem;display:flex;flex-direction:column;gap:0.9rem;">
+            <div>
+              <label class="field-label">Cédula de Identidad</label>
+              <input type="text" formControlName="CI" class="field-input">
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.75rem;">
+              <div>
+                <label class="field-label">Nombre</label>
+                <input type="text" formControlName="Nombre" class="field-input">
+              </div>
+              <div>
+                <label class="field-label">Apellidos</label>
+                <input type="text" formControlName="Apellidos" class="field-input">
+              </div>
+            </div>
+            <div>
+              <label class="field-label">Fecha de Nacimiento</label>
+              <input type="date" formControlName="Fechanac" class="field-input">
+            </div>
+          </form>
+        }
+
+        <!-- Mecánico -->
+        @if (profile.rol_nombre === 'Mecanico') {
+          <form [formGroup]="mecanicoForm" style="padding:1.2rem;display:flex;flex-direction:column;gap:0.9rem;">
+            <div>
+              <label class="field-label">Disponibilidad</label>
+              <div style="display:flex;gap:0.5rem;margin-top:0.15rem;">
+                <button type="button" (click)="toggleEstadoMecanico('Disponible')" class="toggle-btn"
+                  [style.background]="mecanicoForm.value.Estado === 'Disponible' ? 'rgba(34,197,94,0.15)' : 'rgba(255,255,255,0.04)'"
+                  [style.border-color]="mecanicoForm.value.Estado === 'Disponible' ? 'rgba(34,197,94,0.4)' : 'rgba(255,255,255,0.08)'"
+                  [style.color]="mecanicoForm.value.Estado === 'Disponible' ? '#4ade80' : 'rgba(255,255,255,0.45)'">
+                  Disponible
+                </button>
+                <button type="button" (click)="toggleEstadoMecanico('Ocupado')" class="toggle-btn"
+                  [style.background]="mecanicoForm.value.Estado === 'Ocupado' ? 'rgba(239,68,68,0.12)' : 'rgba(255,255,255,0.04)'"
+                  [style.border-color]="mecanicoForm.value.Estado === 'Ocupado' ? 'rgba(239,68,68,0.35)' : 'rgba(255,255,255,0.08)'"
+                  [style.color]="mecanicoForm.value.Estado === 'Ocupado' ? '#f87171' : 'rgba(255,255,255,0.45)'">
+                  Ocupado
+                </button>
+              </div>
+              <p style="font-size:0.68rem;color:rgba(255,255,255,0.3);margin:0.4rem 0 0;">
+                Ponte como Ocupado para no recibir nuevas asignaciones.
+              </p>
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.75rem;">
+              <div>
+                <label class="field-label">Nombre</label>
+                <input type="text" formControlName="Nombre" class="field-input" readonly>
+              </div>
+              <div>
+                <label class="field-label">Apellidos</label>
+                <input type="text" formControlName="Apellidos" class="field-input" readonly>
+              </div>
+            </div>
+          </form>
+        }
+
+        @if (!profile.administrador && !profile.taller && !profile.conductor && !profile.mecanico) {
+          <div style="padding:2rem;text-align:center;color:rgba(255,255,255,0.3);font-size:0.85rem;">
+            No hay datos de perfil adicionales.
+          </div>
+        }
+      </div>
+    </div>
+
+    <!-- ── SERVICIOS DEL TALLER ── -->
+    @if (profile.rol_nombre === 'Taller') {
+      <div class="card">
+        <div class="card-header">
+          <div class="icon-box" style="background:rgba(37,99,235,0.15);">
+            <svg width="15" height="15" fill="none" stroke="#60a5fa" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M11.42 15.17L17.25 21A2.652 2.652 0 0021 17.25l-5.877-5.877M11.42 15.17l2.496-3.03c.317-.384.74-.626 1.208-.766M11.42 15.17l-4.673 4.673a2.25 2.25 0 01-3.182 0l-1.06-1.06a2.25 2.25 0 010-3.182l4.673-4.673"/>
+            </svg>
+          </div>
+          <div>
+            <div style="font-size:0.88rem;font-weight:700;color:rgba(255,255,255,0.85);">Servicios Ofrecidos</div>
+            <div style="font-size:0.72rem;color:rgba(255,255,255,0.3);">Gestiona los servicios de tu taller</div>
+          </div>
+        </div>
+        <div style="padding:1.2rem;">
+          <div style="display:flex;flex-wrap:wrap;gap:0.5rem;margin-bottom:1rem;">
+            @for (svc of misServicios; track svc.id) {
+              <span class="svc-chip">
+                {{ svc.nombre }}
+                <button type="button" (click)="eliminarServicio(svc.id)" class="svc-remove-btn">
+                  <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
+                  </svg>
+                </button>
+              </span>
+            } @empty {
+              <span style="font-size:0.8rem;color:rgba(255,255,255,0.28);font-style:italic;">
+                Sin servicios configurados.
+              </span>
+            }
+          </div>
+          <div style="display:flex;gap:0.6rem;">
+            <select #selectServicio class="field-input" style="flex:1;padding:0.55rem 0.8rem;">
+              <option value="" style="background:#1e293b;">-- Seleccionar servicio --</option>
+              @for (opcion of catalogServiciosDisponibles; track opcion) {
+                <option [value]="opcion" style="background:#1e293b;">{{ opcion }}</option>
+              }
+            </select>
+            <button type="button" class="btn-secondary"
+              (click)="agregarServicio(selectServicio.value); selectServicio.value=''"
+              [disabled]="!selectServicio.value">
+              Agregar
+            </button>
+          </div>
+        </div>
+      </div>
+    }
+
+    <!-- ── MAPA TALLER ── -->
+    @if (profile.rol_nombre === 'Taller') {
+      <div class="card">
+        <div class="card-header" style="justify-content:space-between;">
+          <div style="display:flex;align-items:center;gap:0.75rem;">
+            <div class="icon-box" style="background:rgba(34,197,94,0.12);">
+              <svg width="15" height="15" fill="none" stroke="#4ade80" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z"/>
+                <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z"/>
+              </svg>
+            </div>
+            <div>
+              <div style="font-size:0.88rem;font-weight:700;color:rgba(255,255,255,0.85);">Ubicación del Taller</div>
+              <div style="font-size:0.72rem;color:rgba(255,255,255,0.3);">Haz clic en el mapa para actualizar</div>
+            </div>
+          </div>
+          @if (mapDirty) {
+            <button class="btn-emerald" (click)="saveUbicacion()" [disabled]="savingUbicacion">
+              @if (savingUbicacion) {
+                <svg class="spin" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" d="M12 2a10 10 0 0 1 10 10"/>
+                </svg>
+              }
+              Guardar ubicación
+            </button>
+          }
+        </div>
+        <div id="profile-map" style="height:380px;width:100%;border-radius:0 0 12px 12px;overflow:hidden;"></div>
+      </div>
+    }
+
+    <!-- ── CAMBIO DE CONTRASEÑA ── -->
+    <div class="card">
+      <div class="card-header">
+        <div class="icon-box" style="background:rgba(245,158,11,0.12);">
+          <svg width="15" height="15" fill="none" stroke="#fbbf24" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z"/>
+          </svg>
+        </div>
+        <div>
+          <div style="font-size:0.88rem;font-weight:700;color:rgba(255,255,255,0.85);">Cambiar Contraseña</div>
+          <div style="font-size:0.72rem;color:rgba(255,255,255,0.3);">Requiere verificar tu contraseña actual</div>
+        </div>
+      </div>
+      <form [formGroup]="passwordForm" style="padding:1.2rem;">
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr auto;gap:0.75rem;align-items:start;">
+          <div>
+            <label class="field-label">Contraseña actual</label>
+            <div style="position:relative;">
+              <input #pwd1Input type="password" formControlName="contrasena_actual" class="field-input"
+                placeholder="Tu contraseña actual"
+                style="padding-right:2.2rem;"
+                [class.field-input--error]="passwordForm.get('contrasena_actual')?.invalid && passwordForm.get('contrasena_actual')?.dirty">
+              <button type="button" (click)="pwd1Input.type = pwd1Input.type === 'password' ? 'text' : 'password'"
+                      style="position:absolute; right:0.5rem; top:50%; transform:translateY(-50%);
+                             background:none; border:none; cursor:pointer; color:rgba(156,163,175,0.7);
+                             padding:0.2rem; display:flex; align-items:center; justify-content:center;
+                             transition:color 0.2s;"
+                      onmouseover="this.style.color='#6b7280'"
+                      onmouseout="this.style.color='rgba(156,163,175,0.7)'" tabindex="-1">
+                @if (pwd1Input.type === 'password') {
+                  <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+                } @else {
+                  <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21"/></svg>
+                }
+              </button>
+            </div>
+          </div>
+          <div>
+            <label class="field-label">Nueva contraseña</label>
+            <div style="position:relative;">
+              <input #pwd2Input type="password" formControlName="nueva_contrasena" class="field-input"
+                placeholder="Mínimo 6 caracteres"
+                style="padding-right:2.2rem;"
+                [class.field-input--error]="passwordForm.get('nueva_contrasena')?.invalid && passwordForm.get('nueva_contrasena')?.dirty">
+              <button type="button" (click)="pwd2Input.type = pwd2Input.type === 'password' ? 'text' : 'password'"
+                      style="position:absolute; right:0.5rem; top:50%; transform:translateY(-50%);
+                             background:none; border:none; cursor:pointer; color:rgba(156,163,175,0.7);
+                             padding:0.2rem; display:flex; align-items:center; justify-content:center;
+                             transition:color 0.2s;"
+                      onmouseover="this.style.color='#6b7280'"
+                      onmouseout="this.style.color='rgba(156,163,175,0.7)'" tabindex="-1">
+                @if (pwd2Input.type === 'password') {
+                  <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+                } @else {
+                  <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21"/></svg>
+                }
+              </button>
+            </div>
+            @if (passwordForm.get('nueva_contrasena')?.hasError('minlength') && passwordForm.get('nueva_contrasena')?.dirty) {
+              <span class="field-hint-error">Mínimo 6 caracteres</span>
+            }
+          </div>
+          <div>
+            <label class="field-label">Confirmar contraseña</label>
+            <div style="position:relative;">
+              <input #pwd3Input type="password" formControlName="confirmar_contrasena" class="field-input"
+                placeholder="Repite la nueva contraseña"
+                style="padding-right:2.2rem;"
+                [class.field-input--error]="passwordMismatch">
+              <button type="button" (click)="pwd3Input.type = pwd3Input.type === 'password' ? 'text' : 'password'"
+                      style="position:absolute; right:0.5rem; top:50%; transform:translateY(-50%);
+                             background:none; border:none; cursor:pointer; color:rgba(156,163,175,0.7);
+                             padding:0.2rem; display:flex; align-items:center; justify-content:center;
+                             transition:color 0.2s;"
+                      onmouseover="this.style.color='#6b7280'"
+                      onmouseout="this.style.color='rgba(156,163,175,0.7)'" tabindex="-1">
+                @if (pwd3Input.type === 'password') {
+                  <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+                } @else {
+                  <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21"/></svg>
+                }
+              </button>
+            </div>
+            @if (passwordMismatch) {
+              <span class="field-hint-error">Las contraseñas no coinciden</span>
+            }
+            @if (!passwordMismatch && passwordForm.get('confirmar_contrasena')?.dirty && passwordForm.get('confirmar_contrasena')?.value) {
+              <span class="field-hint-ok">
+                <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/>
+                </svg>
+                Coinciden
+              </span>
+            }
+          </div>
+          <div style="padding-top:1.4rem;">
+            <button type="button" class="btn-amber" (click)="changePassword()"
+              [disabled]="savingPassword || passwordForm.invalid">
+              @if (savingPassword) {
+                <svg class="spin" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" d="M12 2a10 10 0 0 1 10 10"/>
+                </svg>
+              }
+              Actualizar
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+
+    <!-- ── ACCIONES GENERALES ── -->
+    <div style="display:flex;align-items:center;justify-content:space-between;gap:1rem;">
+
+      <!-- Izquierda: eliminar cuenta -->
+      @if (profile.rol_nombre !== 'Administrador') {
+        <button class="btn-danger" (click)="confirmDeleteAccount()" [disabled]="deletingAccount">
+          <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0"/>
+          </svg>
+          Eliminar cuenta
+        </button>
+      } @else {
+        <div></div>
+      }
+
+      <!-- Derecha: cancelar + guardar -->
+      <div style="display:flex;align-items:center;gap:0.65rem;">
+        @if (hasChanges) {
+          <button class="btn-secondary" (click)="cancelChanges()" [disabled]="saving">
+            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M9 15L3 9m0 0l6-6M3 9h12a6 6 0 010 12h-3"/>
+            </svg>
+            Cancelar
+          </button>
+        }
+
+        <button class="btn-primary" (click)="saveProfile()" [disabled]="saving"
+          [class.btn-primary--active]="hasChanges"
+          [class.btn-primary--idle]="!hasChanges">
+          @if (saving) {
+            <svg class="spin" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+              <path stroke-linecap="round" d="M12 2a10 10 0 0 1 10 10"/>
+            </svg>
+            Guardando...
+          } @else {
+            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M17.593 3.322c1.1.128 1.907 1.077 1.907 2.185V21L12 17.25 4.5 21V5.507c0-1.108.806-2.057 1.907-2.185a48.507 48.507 0 0111.186 0z"/>
+            </svg>
+            Guardar Cambios
+          }
+        </button>
+      </div>
+    </div>
+
+  }
+</div>
+
+<!-- ── MODAL ELIMINAR CUENTA ── -->
+@if (showDeleteModal) {
+  <div class="modal-overlay">
+    <div class="modal-box fade-in">
+      <div style="display:flex;align-items:center;gap:0.85rem;margin-bottom:1rem;">
+        <div style="width:40px;height:40px;border-radius:9px;background:rgba(239,68,68,0.12);
+                    border:1px solid rgba(239,68,68,0.2);flex-shrink:0;
+                    display:flex;align-items:center;justify-content:center;">
+          <svg width="18" height="18" fill="none" stroke="#f87171" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z"/>
+          </svg>
+        </div>
+        <div>
+          <div style="font-size:1rem;font-weight:800;color:rgba(255,255,255,0.9);">Eliminar cuenta</div>
+          <div style="font-size:0.75rem;color:rgba(255,255,255,0.35);">Esta acción es irreversible</div>
+        </div>
+      </div>
+      <p style="font-size:0.83rem;color:rgba(255,255,255,0.5);line-height:1.7;margin-bottom:1.5rem;">
+        ¿Estás seguro de que deseas eliminar tu cuenta? Se borrarán todos tus datos de forma permanente.
+      </p>
+      <div style="display:flex;gap:0.65rem;">
+        <button class="btn-secondary" (click)="showDeleteModal = false" style="flex:1;justify-content:center;">
+          Cancelar
+        </button>
+        <button class="btn-danger" (click)="deleteAccount()" [disabled]="deletingAccount"
+          style="flex:1;justify-content:center;">
+          @if (deletingAccount) {
+            <svg class="spin" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+              <path stroke-linecap="round" d="M12 2a10 10 0 0 1 10 10"/>
+            </svg>
+          }
+          Sí, eliminar
+        </button>
+      </div>
+    </div>
+  </div>
+}

@@ -1,0 +1,56 @@
+<div class="p-6">
+  <div class="flex justify-between items-center mb-6">
+    <h2 class="text-2xl font-bold text-gray-800">Planes SaaS</h2>
+    <button class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded shadow">
+      + Nuevo Plan
+    </button>
+  </div>
+
+  <div *ngIf="loading" class="text-center py-10">
+    <p class="text-gray-500">Cargando planes...</p>
+  </div>
+
+  <div *ngIf="!loading && planes.length === 0" class="bg-yellow-50 border-l-4 border-yellow-400 p-4">
+    <div class="flex">
+      <div class="ml-3">
+        <p class="text-sm text-yellow-700">No hay planes registrados.</p>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="!loading && planes.length > 0" class="grid grid-cols-1 md:grid-cols-3 gap-6">
+    <div *ngFor="let plan of planes" class="bg-white rounded-lg shadow-md border overflow-hidden">
+      <div class="p-6">
+        <div class="flex justify-between items-center mb-4">
+          <h3 class="text-xl font-bold text-gray-800">{{ plan.Nombre }}</h3>
+          <span class="px-2 py-1 text-xs font-semibold rounded-full" 
+                [ngClass]="plan.Activo ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'">
+            {{ plan.Activo ? 'Activo' : 'Inactivo' }}
+          </span>
+        </div>
+        <p class="text-3xl font-extrabold text-gray-900 mb-6">${{ plan.PrecioMensual / 100 }}<span class="text-sm font-medium text-gray-500">/mes</span></p>
+        
+        <ul class="space-y-3 mb-6">
+          <li class="flex items-start">
+            <svg class="h-5 w-5 text-green-500 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+            </svg>
+            <span class="text-gray-600">Hasta {{ plan.MaxUsuarios }} usuarios</span>
+          </li>
+          <li class="flex items-start">
+            <svg class="h-5 w-5 text-green-500 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+            </svg>
+            <span class="text-gray-600">Hasta {{ plan.MaxIncidentes }} incidentes/mes</span>
+          </li>
+        </ul>
+        
+        <p class="text-sm text-gray-500 mb-6">{{ plan.Descripcion || 'Sin descripción' }}</p>
+        
+        <button class="w-full bg-blue-50 text-blue-700 hover:bg-blue-100 font-semibold py-2 px-4 rounded border border-blue-200 transition">
+          Editar Plan
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
