@@ -38,7 +38,7 @@ export class DashboardComponent implements OnInit {
   isLoadingKpis = signal<boolean>(false);
 
   ngOnInit() {
-    if (this.hasPermiso('Ver Analytics')) {
+    if (this.hasPermiso('Ver Analytics') || this.role() === 'Taller') {
       this.loadKpis();
     }
   }

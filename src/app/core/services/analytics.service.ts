@@ -11,6 +11,7 @@ export interface AnalyticsKPIs {
   tasa_cancelados_porcentaje: number;
   cumplimiento_sla_porcentaje: number;
   total_incidentes: number;
+  balance_plataforma?: number;
 }
 
 @Injectable({

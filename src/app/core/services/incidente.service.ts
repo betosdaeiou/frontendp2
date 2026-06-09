@@ -50,6 +50,13 @@ export interface VehiculoConductorEnIncidente {
     Apellidos: string;
     CI: number;
   };
+  vehiculo?: {
+    Id: number;
+    Marca?: string;
+    Modelo?: string;
+    Placa?: string;
+    Año?: number;
+  };
 }
 
 export interface PagoEnIncidente {
@@ -101,6 +108,10 @@ export class IncidenteService {
     return this.http.post<Cotizacion>(`${this.apiUrl}/${incidenteId}/ofrecer-cotizacion`, { monto, mensaje, tiempo_estimado });
   }
 
+  rechazarCotizacion(incidenteId: number): Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}/${incidenteId}/rechazar-cotizacion`, {});
+  }
+
   aceptarCotizacion(cotizacionId: number): Observable<IncidenteDetalle> {
     return this.http.post<IncidenteDetalle>(`${this.apiUrl}/cotizaciones/${cotizacionId}/aceptar`, {});
   }
@@ -150,13 +161,37 @@ export class IncidenteService {
   sendChatMessage(incidenteId: number, contenido: string): Observable<MensajeChat> {
     return this.http.post<MensajeChat>(`${this.apiUrl}/${incidenteId}/chat`, { contenido });
   }
+
+  getMisChats(): Observable<ChatSummary[]> {
+    return this.http.get<ChatSummary[]>(`${environment.apiUrl}/chats/mis-chats`);
+  }
+
+  getPersonalChat(destinatarioId: number): Observable<MensajeChat[]> {
+    return this.http.get<MensajeChat[]>(`${environment.apiUrl}/chats/personal/${destinatarioId}`);
+  }
+
+  sendPersonalMessage(destinatarioId: number, contenido: string): Observable<MensajeChat> {
+    return this.http.post<MensajeChat>(`${environment.apiUrl}/chats/personal/${destinatarioId}`, { contenido });
+  }
+}
+
+export interface ChatSummary {
+  is_incidente: boolean;
+  incidente_id?: number;
+  destinatario_id?: number;
+  titulo: string;
+  subtitulo: string;
+  ultimo_mensaje: string;
+  fecha_ultimo_mensaje: string;
+  no_leidos: number;
 }
 
 export interface MensajeChat {
   id: number;
   contenido: string;
   fecha?: string;
-  incidente_id: number;
+  incidente_id?: number;
+  destinatario_id?: number;
   usuario_id: number;
   nombre_usuario?: string;
   rol_usuario?: string;

@@ -10,7 +10,6 @@ export interface Taller {
   Coordenadas?: string;
   Cap?: number;
   Capmax?: number;
-  balance: number;
   IdUsuario: number;
 }
 

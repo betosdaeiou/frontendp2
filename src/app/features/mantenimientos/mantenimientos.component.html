@@ -1,15 +1,16 @@
-<div class="bg-gray-50 flex flex-col gap-6 p-4 md:p-8 min-h-full">
-  <div class="bg-white shadow-[0_8px_30px_rgb(0,0,0,0.04)] sm:rounded-2xl border border-gray-100 flex-1 flex flex-col">
-    <div class="px-6 py-8 border-b border-gray-100 bg-gradient-to-r from-gray-50 to-white flex justify-between items-center flex-wrap gap-4">
+<div class="flex flex-col h-full text-white p-4 md:p-8 min-h-full">
+  <div class="flex-1 flex flex-col">
+    <!-- Header -->
+    <div class="mb-8 flex justify-between items-end flex-wrap gap-4">
       <div>
-        <h1 class="text-2xl font-extrabold tracking-tight text-gray-900 mb-1">
+        <h1 class="text-3xl font-extrabold tracking-tight text-white/90 mb-1">
           Mantenimientos en Curso
         </h1>
-        <p class="text-sm font-medium text-gray-500">
+        <p class="text-sm font-medium text-white/40">
           Gestiona los incidentes asignados a tu taller.
         </p>
         @if (isTrackingLocation) {
-          <div class="mt-3 flex items-center gap-2 bg-green-50 border border-green-200 text-green-700 px-3 py-1.5 rounded-full text-xs font-bold animate-pulse">
+          <div class="mt-3 flex items-center gap-2 bg-green-500/10 border border-green-500/20 text-green-400 px-3 py-1.5 rounded-full text-xs font-bold animate-pulse w-fit">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-4 h-4">
               <path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z" />
               <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z" />
@@ -19,69 +20,90 @@
         }
       </div>
       
-      <button (click)="cargarMantenimientos()" class="flex items-center gap-2 bg-white border border-gray-200 text-gray-700 px-4 py-2.5 rounded-xl text-sm font-semibold hover:bg-gray-50 hover:text-indigo-600 transition-all shadow-sm">
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-4 h-4" [class.animate-spin]="isLoading">
+      <button (click)="cargarMantenimientos()" class="flex items-center gap-2 bg-white/5 border border-white/10 text-white/80 px-4 py-2.5 rounded-xl text-sm font-semibold hover:bg-white/10 hover:text-white transition-all shadow-md backdrop-blur-md">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-4 h-4 text-[#60a5fa]" [class.animate-spin]="isLoading">
           <path stroke-linecap="round" stroke-linejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99" />
         </svg>
         Refrescar
       </button>
     </div>
 
-    <div class="flex-1 p-6 bg-gray-50/50">
+    <div class="flex-1">
       @if (isLoading) {
         <div class="flex justify-center items-center h-64">
-          <div class="animate-spin rounded-full h-12 w-12 border-4 border-indigo-100 border-t-indigo-600"></div>
+          <div class="animate-spin rounded-full h-12 w-12 border-4 border-blue-500/20 border-t-[#3b82f6]"></div>
         </div>
       } @else if (error) {
-        <div class="bg-red-50 text-red-600 p-6 rounded-2xl text-center border border-red-100 flex flex-col items-center gap-3">
+        <div class="bg-red-500/10 text-red-400 p-6 rounded-2xl text-center border border-red-500/20 flex flex-col items-center gap-3">
           <span class="font-medium">{{ error }}</span>
         </div>
       } @else if (mantenimientos.length === 0) {
-        <div class="bg-white border border-gray-100 rounded-3xl p-12 text-center shadow-sm flex flex-col items-center gap-4">
-          <h3 class="text-xl font-bold text-gray-900">No hay mantenimientos activos</h3>
-          <p class="text-gray-500 max-w-sm mx-auto">Actualmente no tienes incidentes asignados o todos ya fueron resueltos.</p>
+        <div class="bg-[#151f32] border border-white/10 rounded-3xl p-12 text-center shadow-[0_8px_30px_rgb(0,0,0,0.5)] flex flex-col items-center gap-4">
+          <h3 class="text-xl font-bold text-white/90">No hay mantenimientos activos</h3>
+          <p class="text-white/40 max-w-sm mx-auto">Actualmente no tienes incidentes asignados o todos ya fueron resueltos.</p>
         </div>
       } @else {
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
           @for (m of mantenimientos; track m.id) {
-            <div class="bg-white rounded-2xl border border-gray-100 overflow-hidden shadow-sm hover:shadow-md transition-shadow flex flex-col relative p-5 gap-4">
+            <div class="bg-[#151f32] rounded-3xl border border-white/10 overflow-hidden shadow-[0_8px_30px_rgb(0,0,0,0.5)] group hover:border-[#60a5fa]/50 transition-all flex flex-col relative p-6 gap-5">
+              <div class="absolute -inset-px bg-gradient-to-br from-blue-500/5 to-purple-500/5 opacity-0 group-hover:opacity-100 transition-opacity blur-xl z-0 pointer-events-none"></div>
               
-              <div class="flex justify-between items-start">
-                <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold"
+              <div class="relative z-10 flex justify-between items-start">
+                <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[0.65rem] font-bold uppercase tracking-wider"
                       [ngClass]="{
-                        'bg-blue-50 text-blue-700': m.estado === 'taller asignado',
-                        'bg-purple-50 text-purple-700': m.estado === 'en camino',
-                        'bg-green-50 text-green-700': m.estado === 'finalizado'
+                        'bg-blue-500/10 border border-blue-500/20 text-[#60a5fa]': m.estado === 'taller asignado',
+                        'bg-purple-500/10 border border-purple-500/20 text-purple-400': m.estado === 'en camino',
+                        'bg-emerald-500/10 border border-emerald-500/20 text-emerald-400': m.estado === 'finalizado'
                       }">
                   {{ m.estado }}
                 </span>
-                <button (click)="chatIncidenteId = m.id" class="text-xs font-semibold text-blue-600 bg-blue-50 px-3 py-1 rounded-full hover:bg-blue-100 transition-colors flex items-center gap-1">
-                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-3.5 h-3.5">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M7.5 8.25h9m-9 3H12m-9.75 1.51c0 1.6 1.123 2.994 2.707 3.227 1.129.166 2.27.293 3.423.379.35.026.67.21.865.501L12 21l2.755-4.133a1.14 1.14 0 01.865-.501 48.172 48.172 0 003.423-.379c1.584-.233 2.707-1.626 2.707-3.228V6.741c0-1.602-1.123-2.995-2.707-3.228A48.394 48.394 0 0012 3c-2.392 0-4.744.175-7.043.513C3.373 3.746 2.25 5.14 2.25 6.741v6.018z" />
-                  </svg>
-                  Chat
-                </button>
-                <button (click)="abrirModalDetalles(m)" class="text-xs font-semibold text-indigo-600 bg-indigo-50 px-3 py-1 rounded-full hover:bg-indigo-100 transition-colors">
-                  Ver Detalles Completo
-                </button>
+                <div class="flex gap-2">
+                  <button (click)="chatIncidenteId = m.id" class="text-xs font-bold text-[#60a5fa] bg-blue-500/10 border border-blue-500/20 px-3 py-1.5 rounded-xl hover:bg-blue-500/20 transition-colors flex items-center gap-1.5 backdrop-blur-sm">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-3.5 h-3.5">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M7.5 8.25h9m-9 3H12m-9.75 1.51c0 1.6 1.123 2.994 2.707 3.227 1.129.166 2.27.293 3.423.379.35.026.67.21.865.501L12 21l2.755-4.133a1.14 1.14 0 01.865-.501 48.172 48.172 0 003.423-.379c1.584-.233 2.707-1.626 2.707-3.228V6.741c0-1.602-1.123-2.995-2.707-3.228A48.394 48.394 0 0012 3c-2.392 0-4.744.175-7.043.513C3.373 3.746 2.25 5.14 2.25 6.741v6.018z" />
+                    </svg>
+                    Chat
+                  </button>
+                  <button (click)="abrirModalDetalles(m)" class="text-xs font-bold text-indigo-400 bg-indigo-500/10 border border-indigo-500/20 px-3 py-1.5 rounded-xl hover:bg-indigo-500/20 transition-colors backdrop-blur-sm">
+                    Ver Detalles Completo
+                  </button>
+                </div>
               </div>
 
-              <div class="flex items-center gap-3">
-                <div class="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center text-gray-500">
-                  <!-- User Icon -->
+              <div class="relative z-10 flex items-center gap-3">
+                <div class="w-12 h-12 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-white/50">
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" />
+                  </svg>
                 </div>
                 <div>
-                  <h3 class="text-sm font-bold text-gray-900">{{ m.vehiculoconductor?.conductor?.Nombre }} {{ m.vehiculoconductor?.conductor?.Apellidos }}</h3>
-                  <p class="text-xs text-gray-500">CI: {{ m.vehiculoconductor?.conductor?.CI }} | ID #{{ m.id }}</p>
+                  <h3 class="text-sm font-bold text-white/90 group-hover:text-[#60a5fa] transition-colors">{{ m.vehiculoconductor?.conductor?.Nombre || 'Desconocido' }} {{ m.vehiculoconductor?.conductor?.Apellidos || '' }}</h3>
+                  <p class="text-xs text-white/40 font-mono mt-0.5">CI: {{ m.vehiculoconductor?.conductor?.CI || 'N/A' }} | ID #{{ m.id }}</p>
+                  @if (m.vehiculoconductor?.vehiculo; as vehiculo) {
+                    <div class="mt-2 text-[11px] font-medium text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-2 py-1 rounded-lg w-fit flex items-center gap-1.5">
+                      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-3.5 h-3.5">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 18.75a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m3 0h6m-9 0H3.375a1.125 1.125 0 01-1.125-1.125V14.25m17.25 4.5a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m3 0h1.125c.621 0 1.129-.504 1.09-1.124a17.902 17.902 0 00-3.213-9.193 2.056 2.056 0 00-1.58-.86H14.25M16.5 18.75h-2.25m0-11.177v-.958c0-.568-.422-1.048-.987-1.106a48.554 48.554 0 00-10.026 0 1.106 1.106 0 00-.987 1.106v7.635m12-6.677v6.677m0 4.5v-4.5m0 0h-12" />
+                      </svg>
+                      {{ vehiculo.Marca }} {{ vehiculo.Modelo }} ({{ vehiculo['Año'] }}) - Placa: {{ vehiculo.Placa }}
+                    </div>
+                  }
+                  @if (role === 'Admin Tenant') {
+                    <div class="mt-2 inline-flex items-center gap-1.5 text-[10px] font-bold text-[#60a5fa] bg-blue-500/10 border border-blue-500/20 px-2 py-1 rounded-lg w-fit">
+                      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-3 h-3">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 21v-7.5a.75.75 0 01.75-.75h3a.75.75 0 01.75.75V21m-4.5 0H2.36m11.14 0H18m0 0h3.64m-1.39 0V9.349m-16.5 11.65V9.35m0 0a3.001 3.001 0 003.75-.615A2.999 2.999 0 009.75 9.75c.896 0 1.7-.393 2.25-1.016a2.999 2.999 0 002.25 1.016c.896 0 1.7-.393 2.25-1.016a3.001 3.001 0 003.75.614m-16.5 0a3.004 3.004 0 01-.621-4.72L4.318 3.44A1.5 1.5 0 015.378 3h13.243a1.5 1.5 0 011.06.44l1.19 1.189a3 3 0 01-.621 4.72m-13.5 8.65h3.75a.75.75 0 00.75-.75V13.5a.75.75 0 00-.75-.75H6.75a.75.75 0 00-.75.75v3.75c0 .415.336.75.75.75z" />
+                      </svg>
+                      {{ m.taller?.Nombre || 'Taller Desconocido' }}
+                    </div>
+                  }
                 </div>
               </div>
 
               <!-- Asignación de Mecánicos (Solo Taller) -->
               @if (role === 'Taller') {
-                <div class="bg-gray-50 border border-gray-200 rounded-xl p-4">
-                  <div class="flex justify-between items-center mb-2">
-                    <label class="block text-xs font-bold text-gray-700">Técnicos Asignados</label>
-                    <button (click)="guardarAsignacion(m.id)" [disabled]="isUpdating" class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1.5 rounded-lg text-xs font-bold transition-colors">
+                <div class="relative z-10 bg-white/5 border border-white/10 rounded-2xl p-5 backdrop-blur-sm">
+                  <div class="flex justify-between items-center mb-3">
+                    <label class="block text-xs font-bold text-white/60 uppercase tracking-wider">Técnicos Asignados</label>
+                    <button (click)="guardarAsignacion(m.id)" [disabled]="isUpdating" class="bg-[#2563eb] hover:bg-[#1d4ed8] text-white px-4 py-1.5 rounded-xl text-xs font-bold transition-all disabled:opacity-50 shadow-[0_4px_14px_rgba(37,99,235,0.39)]">
                       Guardar
                     </button>
                   </div>
@@ -91,42 +113,42 @@
                         <input type="checkbox" class="peer sr-only" 
                                [checked]="asignacionesPendientes[m.id].includes(mec.id)"
                                (change)="toggleMecanicoSeleccion(m.id, mec.id, $event)">
-                        <div class="px-3 py-1.5 rounded-lg border text-xs font-semibold transition-all
-                                    peer-checked:bg-blue-50 peer-checked:border-blue-500 peer-checked:text-blue-700
-                                    border-gray-200 text-gray-600 hover:bg-gray-50 bg-white">
+                        <div class="px-3 py-1.5 rounded-xl border text-xs font-semibold transition-all
+                                    peer-checked:bg-blue-500/20 peer-checked:border-blue-500/50 peer-checked:text-[#60a5fa]
+                                    border-white/10 text-white/60 hover:bg-white/10 hover:text-white/90 bg-transparent">
                           {{ mec.nombre }}
                         </div>
                       </label>
                     }
                     @if (mecanicosDisponibles.length === 0) {
-                      <span class="text-xs text-gray-400 italic">No hay técnicos disponibles</span>
+                      <span class="text-xs text-white/30 italic">No hay técnicos disponibles</span>
                     }
                   </div>
-                  <p class="text-[10px] text-gray-500 mt-2">Toca los nombres para seleccionar/deseleccionar y luego presiona Guardar.</p>
+                  <p class="text-[10px] text-white/30 mt-3 font-medium">Toca los nombres para seleccionar/deseleccionar y luego presiona Guardar.</p>
                 </div>
               } @else {
                 <!-- Vista de mecanico: mostrar con quien trabaja -->
-                <div class="bg-gray-50 border border-gray-200 rounded-xl p-3">
-                  <span class="text-xs font-bold text-gray-600">Técnicos a cargo:</span>
-                  <div class="text-sm text-gray-900 mt-1">
+                <div class="relative z-10 bg-white/5 border border-white/10 rounded-2xl p-4 backdrop-blur-sm">
+                  <span class="text-xs font-bold text-white/60 uppercase tracking-wider block mb-2">Técnicos a cargo:</span>
+                  <div class="flex flex-wrap gap-2">
                     @for (mec of m.mecanicos; track mec.id) {
-                      <span class="inline-block bg-white border border-gray-200 px-2 py-1 rounded text-xs mr-2 mb-1">{{ mec.nombre }}</span>
+                      <span class="inline-block bg-white/10 border border-white/20 text-white/90 px-3 py-1 rounded-xl text-xs font-medium">{{ mec.nombre }}</span>
                     }
                   </div>
                 </div>
               }
 
               <!-- Actions (Todos) -->
-              @if (m.estado !== 'finalizado' && m.estado !== 'finalizado') {
-                <div class="mt-auto pt-4 border-t border-gray-100 flex gap-2">
+              @if (m.estado !== 'finalizado') {
+                <div class="relative z-10 mt-auto pt-5 border-t border-white/5 flex gap-3">
                   @if (m.estado === 'taller asignado') {
                     <button (click)="cambiarEstado(m.id, 'en camino')" [disabled]="isUpdating"
-                            class="flex-1 bg-purple-50 hover:bg-purple-100 text-purple-700 border border-purple-200 py-2.5 rounded-xl font-bold text-sm transition-colors disabled:opacity-50">
+                            class="flex-1 bg-purple-500/10 hover:bg-purple-500/20 text-purple-400 border border-purple-500/30 py-3 rounded-xl font-bold text-sm transition-all disabled:opacity-50">
                       Ir En Camino
                     </button>
                   }
                   <button (click)="cambiarEstado(m.id, 'finalizado')" [disabled]="isUpdating"
-                          class="flex-1 bg-indigo-600 hover:bg-indigo-700 text-white shadow-sm hover:shadow py-2.5 rounded-xl font-bold text-sm transition-all disabled:opacity-50">
+                          class="flex-1 bg-[#2563eb] hover:bg-[#1d4ed8] text-white shadow-[0_4px_14px_rgba(37,99,235,0.39)] py-3 rounded-xl font-bold text-sm transition-all disabled:opacity-50 border border-blue-500/30">
                     Resolver
                   </button>
                 </div>
@@ -134,16 +156,16 @@
 
               <!-- Confirmación de Pago en Efectivo -->
               @if (m.estado === 'finalizado' && tienePagoPendiente(m)) {
-                <div class="mt-auto pt-4 border-t border-amber-200 bg-amber-50 -mx-5 -mb-5 px-5 py-4 rounded-b-2xl">
+                <div class="relative z-10 mt-auto pt-5 border-t border-amber-500/20 bg-amber-500/5 -mx-6 -mb-6 px-6 py-5 rounded-b-3xl">
                   <div class="flex items-center gap-2 mb-2">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5 text-amber-600">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5 text-amber-400">
                       <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v12m-3-2.818l.879.659c1.171.879 3.07.879 4.242 0 1.172-.879 1.172-2.303 0-3.182C13.536 12.219 12.768 12 12 12c-.725 0-1.45-.22-2.003-.659-1.106-.879-1.106-2.303 0-3.182s2.9-.879 4.006 0l.415.33M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                     </svg>
-                    <span class="text-sm font-bold text-amber-800">El conductor indica que pagó en efectivo</span>
+                    <span class="text-sm font-bold text-amber-400">El conductor indica que pagó en efectivo</span>
                   </div>
-                  <p class="text-xs text-amber-700 mb-3">Confirma que recibiste el pago para finalizar el servicio.</p>
+                  <p class="text-xs text-amber-400/60 mb-4 font-medium">Confirma que recibiste el pago para finalizar el servicio.</p>
                   <button (click)="confirmarPagoDirecto(m.id)" [disabled]="isConfirmingPago"
-                          class="w-full bg-green-600 hover:bg-green-700 text-white py-2.5 rounded-xl font-bold text-sm transition-all disabled:opacity-50 flex items-center justify-center gap-2">
+                          class="w-full bg-emerald-600 hover:bg-emerald-500 text-white py-3 rounded-xl font-bold text-sm transition-all disabled:opacity-50 flex items-center justify-center gap-2 shadow-[0_4px_14px_rgba(16,185,129,0.39)]">
                     @if (isConfirmingPago) {
                       <div class="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
                       Confirmando...
@@ -159,8 +181,8 @@
 
               <!-- Estado Pagado -->
               @if (m.estado === 'finalizado') {
-                <div class="mt-auto pt-4 border-t border-green-200 bg-green-50 -mx-5 -mb-5 px-5 py-4 rounded-b-2xl text-center">
-                  <span class="inline-flex items-center gap-1.5 text-green-700 font-bold text-sm">
+                <div class="relative z-10 mt-auto pt-5 border-t border-emerald-500/20 bg-emerald-500/5 -mx-6 -mb-6 px-6 py-5 rounded-b-3xl text-center">
+                  <span class="inline-flex items-center gap-2 text-emerald-400 font-bold text-sm">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5">
                       <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                     </svg>
@@ -178,98 +200,105 @@
 
 <!-- Modal Detalles -->
 @if (isDetalleModalOpen && selectedIncidente) {
-  <div class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-gray-900/60 backdrop-blur-sm">
-    <div class="bg-white rounded-3xl shadow-2xl w-full max-w-4xl max-h-[90vh] overflow-hidden flex flex-col animate-in fade-in zoom-in duration-200">
+  <div class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#0f172a]/80 backdrop-blur-md">
+    <div class="bg-[#151f32] border border-white/10 rounded-[2rem] shadow-[0_20px_50px_rgba(0,0,0,0.5)] w-full max-w-5xl max-h-[90vh] overflow-hidden flex flex-col animate-in fade-in zoom-in duration-200">
       
       <!-- Header -->
-      <div class="px-6 py-5 border-b border-gray-100 flex justify-between items-center bg-gray-50/50">
+      <div class="px-8 py-6 border-b border-white/5 flex justify-between items-center bg-white/5">
         <div>
-          <h2 class="text-xl font-bold text-gray-900">Detalles del Incidente #{{ selectedIncidente.id }}</h2>
+          <h2 class="text-2xl font-black text-white/90">Detalles del Incidente <span class="text-[#60a5fa]">#{{ selectedIncidente.id }}</span></h2>
         </div>
-        <button (click)="cerrarModalDetalles()" class="text-gray-400 hover:bg-gray-100 hover:text-gray-600 p-2 rounded-full transition-colors">
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-6 h-6">
+        <button (click)="cerrarModalDetalles()" class="text-white/40 hover:bg-white/10 hover:text-white p-2.5 rounded-xl transition-colors">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-6 h-6">
             <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
           </svg>
         </button>
       </div>
 
       <!-- Content -->
-      <div class="p-6 overflow-y-auto flex-1 bg-gray-50/30">
-        <div class="grid grid-cols-1 lg:grid-cols-5 gap-6">
+      <div class="p-8 overflow-y-auto flex-1 custom-scrollbar">
+        <div class="grid grid-cols-1 lg:grid-cols-5 gap-8">
           
           <!-- Columna Izquierda: Mapa e Info Básica -->
-          <div class="lg:col-span-3 space-y-6">
+          <div class="lg:col-span-3 space-y-8">
             
-            <div class="bg-white border border-gray-100 rounded-2xl p-5 shadow-sm">
-              <h3 class="text-sm font-bold text-gray-900 mb-3 flex items-center gap-2">
+            <div class="bg-white/5 border border-white/10 rounded-3xl p-6 shadow-sm">
+              <h3 class="text-sm font-bold text-white/60 uppercase tracking-wider mb-4 flex items-center gap-2">
                 Ubicación del Incidente
               </h3>
-              <div class="h-64 rounded-xl overflow-hidden border border-gray-200 bg-gray-100" #mapContainer></div>
-              <p class="text-xs text-gray-500 mt-2 font-mono break-all bg-gray-50 p-2 rounded-lg border border-gray-100">
-                GPS: {{ selectedIncidente.coordenadagps }}
+              <div class="h-72 rounded-2xl overflow-hidden border border-white/10 bg-[#0f172a]" #mapContainer></div>
+              <p class="text-xs text-white/40 mt-4 font-mono break-all bg-black/20 p-3 rounded-xl border border-white/5">
+                <span class="text-white/20">GPS:</span> {{ selectedIncidente.coordenadagps }}
               </p>
             </div>
 
-            <div class="bg-white border border-gray-100 rounded-2xl p-5 shadow-sm">
-              <h3 class="text-sm font-bold text-gray-900 mb-3">Mensaje del Conductor</h3>
-              <p class="text-gray-700 text-sm leading-relaxed whitespace-pre-wrap bg-blue-50/50 p-4 rounded-xl border border-blue-100">
+            <div class="bg-white/5 border border-white/10 rounded-3xl p-6 shadow-sm">
+              <h3 class="text-sm font-bold text-white/60 uppercase tracking-wider mb-4">Mensaje del Conductor</h3>
+              <p class="text-white/80 text-sm leading-relaxed whitespace-pre-wrap bg-blue-500/5 p-5 rounded-2xl border border-blue-500/10">
                 {{ selectedIncidente.evidencias[0]?.descripcion || 'Sin descripción' }}
               </p>
             </div>
           </div>
 
           <!-- Columna Derecha: Fotos e IA -->
-          <div class="lg:col-span-2 space-y-6">
+          <div class="lg:col-span-2 space-y-8">
             
             <!-- Fotos -->
-            <div class="bg-white border border-gray-100 rounded-2xl p-5 shadow-sm">
-              <h3 class="text-sm font-bold text-gray-900 mb-3 flex items-center gap-2">
-                Evidencia Fotográfica
-                <span class="bg-gray-100 text-gray-600 py-0.5 px-2 rounded-full text-[10px]">
-                  {{ getFotosDelIncidente(selectedIncidente).length }}
+            <div class="bg-white/5 border border-white/10 rounded-3xl p-6 shadow-sm">
+              <h3 class="text-sm font-bold text-white/60 uppercase tracking-wider mb-4 flex items-center justify-between">
+                Evidencia
+                <span class="bg-white/10 text-white/80 py-1 px-2.5 rounded-lg text-[10px]">
+                  {{ getFotosDelIncidente(selectedIncidente).length }} fotos
                 </span>
               </h3>
               
               @if (getFotosDelIncidente(selectedIncidente).length > 0) {
-                <div class="grid grid-cols-2 gap-2">
+                <div class="grid grid-cols-2 gap-3">
                   @for (foto of getFotosDelIncidente(selectedIncidente); track foto) {
-                    <a [href]="foto" target="_blank" class="block aspect-square rounded-xl overflow-hidden border border-gray-200 group relative">
-                      <img [src]="foto" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300" alt="Evidencia">
+                    <a [href]="foto" target="_blank" class="block aspect-square rounded-2xl overflow-hidden border border-white/10 group relative">
+                      <div class="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-colors z-10"></div>
+                      <img [src]="foto" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" alt="Evidencia">
                     </a>
                   }
                 </div>
               } @else {
-                <div class="bg-gray-50 rounded-xl p-6 text-center border border-gray-100">
-                  <span class="text-xs text-gray-500 font-medium">No se adjuntaron fotos</span>
+                <div class="bg-black/20 rounded-2xl p-8 text-center border border-white/5">
+                  <span class="text-sm text-white/30 font-medium">No se adjuntaron fotos</span>
                 </div>
               }
             </div>
 
             <!-- IA Análisis -->
             @if (selectedIncidente.analisis_ia) {
-              <div class="bg-gradient-to-br from-indigo-50 to-purple-50 border border-indigo-100 rounded-2xl p-5 shadow-sm">
-                <h3 class="text-sm font-bold text-indigo-900 mb-4 flex items-center gap-2">
-                  Análisis IA
+              <div class="bg-gradient-to-br from-indigo-500/10 to-purple-500/10 border border-indigo-500/20 rounded-3xl p-6 shadow-sm relative overflow-hidden">
+                <div class="absolute top-0 right-0 p-4 opacity-10 text-indigo-400">
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-16 h-16">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M9.75 3.104v5.714a2.25 2.25 0 01-.659 1.591L5 14.5M9.75 3.104c-.251.023-.501.05-.75.082m.75-.082a24.301 24.301 0 014.5 0m0 0v5.714c0 .597.237 1.17.659 1.591L19.8 15.3M14.25 3.104c.251.023.501.05.75.082M19.8 15.3l-1.57.393A9.065 9.065 0 0112 15a9.065 9.065 0 00-6.23-.693L5 14.5m14.8.8l1.402 1.402c1.232 1.232.65 3.318-1.067 3.611A48.309 48.309 0 0112 21c-2.773 0-5.491-.235-8.135-.687-1.718-.293-2.3-2.379-1.067-3.61L5 14.5" />
+                  </svg>
+                </div>
+                
+                <h3 class="text-sm font-bold text-indigo-400 uppercase tracking-wider mb-5 flex items-center gap-2 relative z-10">
+                  Análisis de IA
                 </h3>
-                <div class="space-y-4">
+                <div class="space-y-5 relative z-10">
                   <div>
-                    <span class="text-[10px] font-bold text-indigo-400 uppercase tracking-wider block mb-1">Severidad Detectada</span>
-                    <span class="inline-flex items-center px-2.5 py-1 rounded-md text-xs font-bold"
+                    <span class="text-[10px] font-bold text-white/40 uppercase tracking-widest block mb-1.5">Severidad</span>
+                    <span class="inline-flex items-center px-3 py-1 rounded-lg text-xs font-bold"
                           [ngClass]="{
-                            'bg-red-100 text-red-800': selectedIncidente.analisis_ia.NivelPrioridad === 'Alta',
-                            'bg-yellow-100 text-yellow-800': selectedIncidente.analisis_ia.NivelPrioridad === 'Media',
-                            'bg-green-100 text-green-800': selectedIncidente.analisis_ia.NivelPrioridad === 'Baja'
+                            'bg-red-500/10 border border-red-500/20 text-red-400': selectedIncidente.analisis_ia.NivelPrioridad === 'Alta',
+                            'bg-amber-500/10 border border-amber-500/20 text-amber-400': selectedIncidente.analisis_ia.NivelPrioridad === 'Media',
+                            'bg-green-500/10 border border-green-500/20 text-green-400': selectedIncidente.analisis_ia.NivelPrioridad === 'Baja'
                           }">
                       {{ selectedIncidente.analisis_ia.NivelPrioridad }}
                     </span>
                   </div>
                   <div>
-                    <span class="text-[10px] font-bold text-indigo-400 uppercase tracking-wider block mb-1">Clasificación</span>
-                    <p class="text-sm font-semibold text-indigo-950">{{ selectedIncidente.analisis_ia.Clasificacion }}</p>
+                    <span class="text-[10px] font-bold text-white/40 uppercase tracking-widest block mb-1.5">Clasificación</span>
+                    <p class="text-sm font-bold text-white/90">{{ selectedIncidente.analisis_ia.Clasificacion }}</p>
                   </div>
                   <div>
-                    <span class="text-[10px] font-bold text-indigo-400 uppercase tracking-wider block mb-1">Resumen del Asistente</span>
-                    <p class="text-xs text-indigo-900/80 leading-relaxed bg-white/60 p-3 rounded-xl border border-indigo-50/50">
+                    <span class="text-[10px] font-bold text-white/40 uppercase tracking-widest block mb-1.5">Resumen Automático</span>
+                    <p class="text-sm text-white/70 leading-relaxed bg-black/20 p-4 rounded-2xl border border-white/5">
                       {{ selectedIncidente.analisis_ia.Resumen }}
                     </p>
                   </div>

@@ -11,6 +11,7 @@ export interface Mecanico {
   apellidos: string;
   fechanac?: number;
   taller_id?: number;
+  taller_nombre?: string;
   estado?: string;
 }
 

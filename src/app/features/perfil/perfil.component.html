@@ -134,19 +134,19 @@
           </form>
         }
 
-        <!-- Taller -->
-        @if (profile.rol_nombre === 'Taller') {
+        <!-- Admin Tenant -->
+        @if (profile.rol_nombre === 'Admin Tenant') {
           <div style="padding:1rem 1.2rem 0;">
             <div style="background:linear-gradient(135deg,#1e3a6e,#1e3560);
                         border:1px solid rgba(37,99,235,0.25);border-radius:10px;
                         padding:1rem 1.2rem;display:flex;align-items:center;justify-content:space-between;">
               <div>
                 <div style="font-size:0.65rem;font-weight:700;color:rgba(255,255,255,0.4);
-                            text-transform:uppercase;letter-spacing:0.07em;margin-bottom:0.3rem;">Balance Actual</div>
+                            text-transform:uppercase;letter-spacing:0.07em;margin-bottom:0.3rem;">Balance Actual del Tenant</div>
                 <div style="font-size:1.8rem;font-weight:900;color:rgba(255,255,255,0.92);
-                            letter-spacing:-0.03em;line-height:1;">${{ profile.taller?.balance || 0 }}</div>
+                            letter-spacing:-0.03em;line-height:1;">${{ profile.tenant_balance || 0 }}</div>
                 <div style="font-size:0.68rem;color:rgba(255,255,255,0.35);margin-top:0.3rem;">
-                  @if ((profile.taller?.balance || 0) >= 0) { Monto a favor } @else { Deuda pendiente }
+                  @if ((profile.tenant_balance || 0) >= 0) { Monto a favor } @else { Deuda pendiente }
                 </div>
               </div>
               <div style="width:38px;height:38px;border-radius:50%;background:rgba(255,255,255,0.08);
@@ -157,6 +157,10 @@
               </div>
             </div>
           </div>
+        }
+
+        <!-- Taller -->
+        @if (profile.rol_nombre === 'Taller') {
           <form [formGroup]="tallerForm" style="padding:1rem 1.2rem;display:flex;flex-direction:column;gap:0.9rem;">
             <div>
               <label class="field-label">Nombre del Taller</label>

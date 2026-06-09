@@ -14,7 +14,6 @@ export interface TallerProfile {
   Coordenadas: string | null;
   Cap: number | null;
   Capmax: number | null;
-  balance: number | null;
 }
 
 export interface ConductorProfile {
@@ -39,6 +38,7 @@ export interface ProfileData {
   conductor: ConductorProfile | null;
   mecanico: MecanicoProfile | null;
   tenant_nombre?: string | null;
+  tenant_balance?: number | null;
 }
 
 export interface ProfileUpdatePayload {

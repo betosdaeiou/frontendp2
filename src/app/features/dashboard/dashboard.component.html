@@ -54,6 +54,13 @@
         Mi Perfil
       </a>
 
+      <a routerLink="/dashboard/chats" routerLinkActive="active" class="s-link">
+        <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M8.625 12a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0H8.25m4.125 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0H12m4.125 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0h-.375M21 12c0 4.556-4.03 8.25-9 8.25a9.764 9.764 0 01-2.555-.337A5.972 5.972 0 015.41 20.97a5.969 5.969 0 01-.474-.065 4.48 4.48 0 00.978-2.025c.09-.457-.133-.901-.467-1.226C3.93 16.178 3 14.189 3 12c0-4.556 4.03-8.25 9-8.25s9 3.694 9 8.25z" />
+        </svg>
+        Chats
+      </a>
+
       @if (hasPermiso('Ver Bitacora')) {
         <a routerLink="/dashboard/bitacora" routerLinkActive="active" class="s-link">
           <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
@@ -63,7 +70,7 @@
         </a>
       }
 
-      @if (hasPermiso('Ver Operaciones')) {
+      @if (hasPermiso('Ver Operaciones') || role() === 'Admin Tenant') {
         <p style="font-size:0.65rem; font-weight:700; color:rgba(255,255,255,0.25);
                   text-transform:uppercase; letter-spacing:0.08em; padding:0 0.5rem; margin:0.9rem 0 0.3rem;">Operaciones</p>
         <a routerLink="/dashboard/solicitudes-pendientes" routerLinkActive="active" class="s-link">
@@ -252,7 +259,7 @@
 
       @if (isHomePage()) {
 
-        @if (hasPermiso('Ver Operaciones')) {
+        @if (hasPermiso('Ver Operaciones') || role() === 'Admin Tenant') {
           <!-- GREETING -->
           <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:1rem; margin-bottom:1.6rem;">
             <div>
@@ -261,7 +268,7 @@
               </h1>
               <p style="font-size:0.85rem; color:rgba(255,255,255,0.4); margin:0;">Hoy es un buen dia para optimizar tu operacion.</p>
             </div>
-            @if (hasPermiso('Ver Operaciones') && role() !== 'Mecanico') {
+            @if ((hasPermiso('Ver Operaciones') || role() === 'Admin Tenant') && role() !== 'Mecanico') {
               <a routerLink="/dashboard/solicitudes-pendientes"
                  style="display:inline-flex; align-items:center; gap:0.45rem;
                         background:#2563eb; color:white; font-size:0.82rem; font-weight:700;
@@ -295,10 +302,23 @@
           </div>
         }
 
-        @if (hasPermiso('Ver Analytics')) {
+        @if (hasPermiso('Ver Analytics') || role() === 'Taller') {
           <!-- KPI CARDS -->
           @if (kpis()) {
-            <div style="display:grid; grid-template-columns:repeat(5,1fr); gap:0.85rem; margin-bottom:1.6rem;">
+            <div style="display:grid; grid-template-columns:repeat(6,1fr); gap:0.85rem; margin-bottom:1.6rem;">
+
+              @if (role() === 'Admin Tenant') {
+                <div class="kpi-card">
+                  <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.8rem;">
+                    <span style="font-size:0.7rem; font-weight:700; color:rgba(255,255,255,0.38); text-transform:uppercase; letter-spacing:0.07em;">Balance</span>
+                    <div style="width:30px;height:30px;border-radius:8px;background:rgba(245,158,11,0.15);display:flex;align-items:center;justify-content:center;">
+                      <svg width="14" height="14" fill="none" stroke="#f59e0b" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 6l3 1m0 0l-3 9a5.002 5.002 0 006.001 0M6 7l3 9M6 7l6-2m6 2l3-1m-3 1l-3 9a5.002 5.002 0 006.001 0M18 7l3 9m-3-9l-6-2m0-2v2m0 16V5m0 16H9m3 0h3"/></svg>
+                    </div>
+                  </div>
+                  <div style="font-size:1.8rem;font-weight:900;letter-spacing:-0.04em;line-height:1;margin-bottom:0.35rem;" [ngClass]="(kpis()!.balance_plataforma ?? 0) >= 0 ? 'text-white' : 'text-red-400'">Bs. {{ kpis()!.balance_plataforma }}</div>
+                  <div style="font-size:0.72rem;color:#f59e0b;font-weight:600;">Saldo en plataforma</div>
+                </div>
+              }
 
               <div class="kpi-card">
                 <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.8rem;">

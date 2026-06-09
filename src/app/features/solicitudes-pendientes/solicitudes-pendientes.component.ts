@@ -15,16 +15,19 @@ import { ChatComponent } from '../chat/chat.component';
   standalone: true,
   imports: [CommonModule, FormsModule, ChatComponent],
   template: `
-    <div class="bg-gray-50 flex flex-col gap-6 p-4 md:p-8 min-h-full">
-      <div class="bg-white shadow-[0_8px_30px_rgb(0,0,0,0.04)] sm:rounded-2xl border border-gray-100 flex-1 flex flex-col">
-        <div class="px-6 py-8 border-b border-gray-100 bg-gradient-to-r from-gray-50 to-white flex justify-between items-center flex-wrap gap-4">
+    <div class="flex flex-col h-full text-white p-4 md:p-8 min-h-full">
+      <div class="flex-1 flex flex-col">
+        <!-- Header -->
+        <div class="mb-8 flex justify-between items-end flex-wrap gap-4">
           <div>
-            <h1 class="text-2xl font-extrabold tracking-tight text-gray-900 mb-1">
+            <h1 class="text-3xl font-extrabold tracking-tight text-white mb-2 drop-shadow-md">
               Solicitudes Pendientes
             </h1>
-            <p class="text-gray-500 text-sm">Incidentes reportados por conductores que aún no tienen taller asignado. Puedes ofrecer tu cotización.</p>
+            <p class="text-blue-100/70 text-sm max-w-2xl">
+              Incidentes reportados por conductores que aún no tienen taller asignado. Puedes ofrecer tu cotización.
+            </p>
           </div>
-          <button (click)="loadSolicitudes()" class="px-4 py-2.5 rounded-xl font-semibold text-sm transition-all duration-300 bg-gray-100 text-gray-700 hover:bg-gray-200 flex items-center gap-2">
+          <button (click)="loadSolicitudes()" class="px-5 py-2.5 rounded-xl font-semibold text-sm transition-all duration-300 bg-white/10 backdrop-blur-md border border-white/10 text-white hover:bg-white/20 hover:shadow-[0_0_15px_rgba(255,255,255,0.1)] flex items-center gap-2">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-4 h-4">
               <path stroke-linecap="round" stroke-linejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182" />
             </svg>
@@ -32,20 +35,20 @@ import { ChatComponent } from '../chat/chat.component';
           </button>
         </div>
 
-        <div class="p-6 flex-1 bg-white overflow-y-auto">
+        <div class="flex-1 overflow-y-auto">
           <!-- Loading -->
           @if (isLoading) {
             <div class="flex items-center justify-center py-20">
               <div class="flex flex-col items-center gap-3">
-                <div class="w-10 h-10 border-4 border-blue-200 border-t-blue-600 rounded-full animate-spin"></div>
-                <p class="text-gray-400 text-sm">Cargando solicitudes...</p>
+                <div class="w-10 h-10 border-4 border-blue-400/30 border-t-blue-400 rounded-full animate-spin shadow-[0_0_15px_rgba(96,165,250,0.5)]"></div>
+                <p class="text-blue-200/60 text-sm font-medium animate-pulse">Cargando solicitudes...</p>
               </div>
             </div>
           }
 
           <!-- Error -->
           @if (errorMessage) {
-            <div class="mb-4 bg-red-50 text-red-600 px-4 py-3 rounded-xl text-sm border border-red-100 flex items-center gap-3">
+            <div class="mb-6 bg-red-500/10 backdrop-blur-md text-red-400 px-4 py-3 rounded-xl text-sm border border-red-500/20 flex items-center gap-3 shadow-[0_0_15px_rgba(239,68,68,0.1)]">
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5 shrink-0">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z" />
               </svg>
@@ -55,16 +58,17 @@ import { ChatComponent } from '../chat/chat.component';
 
           <!-- Lista de solicitudes -->
           @if (!isLoading) {
-            <div class="space-y-5">
+            <div class="space-y-6">
               @for (inc of solicitudes; track inc.id) {
-                <div class="bg-white border-2 border-gray-100 rounded-2xl overflow-hidden hover:border-blue-200 hover:shadow-md transition-all group">
+                <div class="bg-[#1e293b]/60 backdrop-blur-xl border border-white/10 rounded-2xl overflow-hidden hover:border-blue-400/50 hover:shadow-[0_0_25px_rgba(59,130,246,0.15)] transition-all duration-300 group">
                   <!-- Mapa embebido -->
                   @if (inc.coordenadagps) {
-                    <div class="relative">
-                      <div [id]="'map-inc-' + inc.id" class="h-[220px] w-full"></div>
-                      <div class="absolute top-3 left-3 z-[1000] bg-white/90 backdrop-blur-sm rounded-lg px-3 py-1.5 shadow-md">
-                        <p class="text-xs text-gray-500 font-medium flex items-center gap-1.5">
-                          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-3.5 h-3.5 text-red-500">
+                    <div class="relative border-b border-white/10">
+                      <div [id]="'map-inc-' + inc.id" class="h-[220px] w-full brightness-90 contrast-125 saturate-50 group-hover:saturate-100 transition-all duration-500"></div>
+                      <div class="absolute inset-0 bg-gradient-to-b from-transparent to-[#1e293b]/60 pointer-events-none"></div>
+                      <div class="absolute top-3 left-3 z-[1000] bg-black/40 backdrop-blur-md border border-white/10 rounded-lg px-3 py-1.5 shadow-lg">
+                        <p class="text-xs text-white font-medium flex items-center gap-1.5">
+                          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-3.5 h-3.5 text-red-400">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z" />
                             <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z" />
                           </svg>
@@ -72,8 +76,8 @@ import { ChatComponent } from '../chat/chat.component';
                         </p>
                       </div>
                       @if (inc.distancia_km != null) {
-                        <div class="absolute top-3 right-3 z-[1000] bg-blue-600 text-white rounded-lg px-3 py-1.5 shadow-md">
-                          <p class="text-xs font-bold flex items-center gap-1.5">
+                        <div class="absolute top-3 right-3 z-[1000] bg-blue-500/80 backdrop-blur-md border border-blue-400/30 text-white rounded-lg px-3 py-1.5 shadow-[0_0_15px_rgba(59,130,246,0.5)]">
+                          <p class="text-xs font-bold flex items-center gap-1.5 drop-shadow">
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-3.5 h-3.5">
                               <path stroke-linecap="round" stroke-linejoin="round" d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5" />
                             </svg>
@@ -85,17 +89,32 @@ import { ChatComponent } from '../chat/chat.component';
                   }
 
                   <div class="p-6">
+                    <!-- Banner de Solicitud Directa -->
+                    @if (esCotizacionSolicitadaDirecta(inc)) {
+                      <div class="mb-5 bg-gradient-to-r from-blue-600/20 to-indigo-600/20 border border-blue-500/40 rounded-xl p-4 shadow-[0_0_20px_rgba(59,130,246,0.15)] flex items-start gap-3 animate-pulse">
+                        <div class="bg-blue-500/20 p-2 rounded-lg shrink-0">
+                          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6 text-blue-400">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75v-.7V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0M3.124 7.5A8.969 8.969 0 015.292 3m13.416 0a8.969 8.969 0 012.168 4.5" />
+                          </svg>
+                        </div>
+                        <div>
+                          <h4 class="text-blue-300 font-bold text-sm tracking-wide">¡Cotización Solicitada Directamente!</h4>
+                          <p class="text-blue-100/80 text-sm mt-1">El conductor ha solicitado específicamente que tu taller atienda este incidente.</p>
+                        </div>
+                      </div>
+                    }
+
                     <!-- Header -->
                     <div class="flex justify-between items-start flex-wrap gap-4">
                       <div class="flex items-center gap-4">
-                        <div class="w-12 h-12 rounded-xl bg-red-50 text-red-500 flex items-center justify-center">
+                        <div class="w-12 h-12 rounded-xl bg-red-500/20 text-red-400 flex items-center justify-center border border-red-500/30 shadow-[0_0_15px_rgba(239,68,68,0.2)]">
                           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z" />
                           </svg>
                         </div>
                         <div>
-                          <h3 class="font-bold text-gray-900 text-lg">Incidente #{{ inc.id }}</h3>
-                          <p class="text-sm text-gray-400 flex items-center gap-1.5 mt-0.5">
+                          <h3 class="font-bold text-white text-lg drop-shadow">Incidente #{{ inc.id }}</h3>
+                          <p class="text-sm text-blue-200/60 flex items-center gap-1.5 mt-0.5">
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
                               <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" />
                             </svg>
@@ -105,15 +124,15 @@ import { ChatComponent } from '../chat/chat.component';
                       </div>
                       <div class="flex items-center gap-2">
                         @if (inc.distancia_km != null) {
-                          <span class="inline-flex items-center gap-1.5 bg-blue-50 text-blue-600 border border-blue-200 px-3 py-1 rounded-full text-xs font-bold">
+                          <span class="inline-flex items-center gap-1.5 bg-blue-500/20 text-blue-300 border border-blue-500/30 px-3 py-1 rounded-full text-xs font-bold">
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-3 h-3">
                               <path stroke-linecap="round" stroke-linejoin="round" d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5" />
                             </svg>
                             {{ inc.distancia_km }} km
                           </span>
                         }
-                        <span class="inline-flex items-center gap-1.5 bg-red-50 text-red-600 border border-red-200 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider">
-                          <span class="w-2 h-2 rounded-full bg-red-500 animate-pulse"></span>
+                        <span class="inline-flex items-center gap-1.5 bg-red-500/20 text-red-400 border border-red-500/30 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider shadow-[0_0_10px_rgba(239,68,68,0.2)]">
+                          <span class="w-2 h-2 rounded-full bg-red-400 animate-pulse shadow-[0_0_5px_rgba(248,113,113,0.8)]"></span>
                           {{ inc.estado }}
                         </span>
                       </div>
@@ -121,53 +140,53 @@ import { ChatComponent } from '../chat/chat.component';
 
                     <!-- Descripción -->
                     @if (getDescripcion(inc)) {
-                      <div class="mt-4 bg-gray-50 rounded-xl px-4 py-3 flex items-start gap-3">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5 text-amber-500 shrink-0 mt-0.5">
+                      <div class="mt-5 bg-white/5 border border-white/5 rounded-xl px-4 py-3 flex items-start gap-3">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5 text-amber-400 shrink-0 mt-0.5 drop-shadow">
                           <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" />
                         </svg>
                         <div>
-                          <p class="text-xs text-gray-400 font-medium uppercase tracking-wider">Descripción</p>
-                          <p class="text-sm text-gray-700 mt-0.5">{{ getDescripcion(inc) }}</p>
+                          <p class="text-xs text-blue-200/50 font-medium uppercase tracking-wider mb-1">Descripción</p>
+                          <p class="text-sm text-gray-200">{{ getDescripcion(inc) }}</p>
                         </div>
                       </div>
                     }
 
                     <!-- Análisis IA -->
                     @if (inc.analisis_ia) {
-                      <div class="mt-4 bg-indigo-50/50 border border-indigo-100 rounded-xl p-4">
-                        <div class="flex items-center gap-2 mb-2">
-                          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5 text-indigo-600">
+                      <div class="mt-4 bg-indigo-500/10 border border-indigo-500/20 rounded-xl p-4 shadow-[inset_0_0_20px_rgba(99,102,241,0.05)]">
+                        <div class="flex items-center gap-2 mb-3">
+                          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5 text-indigo-400 drop-shadow">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09zM18.259 8.715L18 9.75l-.259-1.035a3.375 3.375 0 00-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 002.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 002.456 2.456L21.75 6l-1.035.259a3.375 3.375 0 00-2.456 2.456zM16.894 20.567L16.5 21.75l-.394-1.183a2.25 2.25 0 00-1.428-1.428L13.5 18.75l1.178-.394a2.25 2.25 0 001.428-1.428L16.5 15.75l.394 1.178a2.25 2.25 0 001.428 1.428l1.178.394-1.178.394a2.25 2.25 0 00-1.428 1.428z" />
                           </svg>
-                          <h4 class="font-bold text-indigo-900 text-sm">Análisis Inteligente</h4>
+                          <h4 class="font-bold text-indigo-300 text-sm tracking-wide">Análisis Inteligente</h4>
                           
                           @if (inc.analisis_ia.NivelPrioridad) {
-                            <span class="ml-auto inline-flex items-center rounded-md bg-indigo-100 px-2 py-1 text-xs font-medium text-indigo-700 ring-1 ring-inset ring-indigo-700/10">
+                            <span class="ml-auto inline-flex items-center rounded-md bg-indigo-500/20 px-2.5 py-1 text-xs font-medium text-indigo-300 border border-indigo-500/30">
                               Gravedad: {{ inc.analisis_ia.NivelPrioridad }}
                             </span>
                           }
                         </div>
                         
                         @if (inc.analisis_ia.Resumen) {
-                          <p class="text-sm text-indigo-800/80 leading-relaxed">{{ inc.analisis_ia.Resumen }}</p>
+                          <p class="text-sm text-indigo-100/80 leading-relaxed">{{ inc.analisis_ia.Resumen }}</p>
                         }
                         @if (inc.analisis_ia.Clasificacion) {
-                          <p class="text-sm text-indigo-800/80 leading-relaxed mt-2"><span class="font-semibold">Recomendación:</span> {{ inc.analisis_ia.Clasificacion }}</p>
+                          <p class="text-sm text-indigo-100/90 leading-relaxed mt-2"><span class="font-semibold text-indigo-300">Recomendación:</span> {{ inc.analisis_ia.Clasificacion }}</p>
                         }
                       </div>
                     }
 
                     <!-- Evidencias count -->
                     @if (inc.evidencias.length > 0) {
-                      <div class="mt-3 flex items-center gap-2">
-                        <span class="inline-flex items-center gap-1 bg-amber-50 text-amber-600 border border-amber-200 px-2.5 py-1 rounded-lg text-xs font-semibold">
+                      <div class="mt-4 flex items-center gap-2">
+                        <span class="inline-flex items-center gap-1.5 bg-amber-500/20 text-amber-300 border border-amber-500/30 px-3 py-1 rounded-lg text-xs font-semibold">
                           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-3.5 h-3.5">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M18.375 12.739l-7.693 7.693a4.5 4.5 0 01-6.364-6.364l10.94-10.94A3 3 0 1119.5 7.372L8.552 18.32m.009-.01l-.01.01m5.699-9.941l-7.81 7.81a1.5 1.5 0 002.112 2.13" />
                           </svg>
                           {{ inc.evidencias.length }} evidencia(s)
                         </span>
                         @if (hasPhotos(inc)) {
-                          <span class="inline-flex items-center gap-1 bg-purple-50 text-purple-600 border border-purple-200 px-2.5 py-1 rounded-lg text-xs font-semibold">
+                          <span class="inline-flex items-center gap-1.5 bg-purple-500/20 text-purple-300 border border-purple-500/30 px-3 py-1 rounded-lg text-xs font-semibold">
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-3.5 h-3.5">
                               <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.41a2.25 2.25 0 013.182 0l2.909 2.91m-18 3.75h16.5a1.5 1.5 0 001.5-1.5V6a1.5 1.5 0 00-1.5-1.5H3.75A1.5 1.5 0 002.25 6v12a1.5 1.5 0 001.5 1.5zm10.5-11.25h.008v.008h-.008V8.25zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z" />
                             </svg>
@@ -178,10 +197,11 @@ import { ChatComponent } from '../chat/chat.component';
 
                       <!-- Photo Gallery -->
                       @if (hasPhotos(inc)) {
-                        <div class="mt-3 grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-2">
+                        <div class="mt-3 grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-3">
                           @for (url of getPhotoUrls(inc); track url) {
-                            <div class="aspect-square rounded-lg overflow-hidden border border-gray-200 cursor-pointer hover:opacity-80 hover:border-blue-300 transition-all" (click)="openLightbox(url)">
-                              <img [src]="url" alt="Evidencia" class="w-full h-full object-cover" loading="lazy">
+                            <div class="aspect-square rounded-xl overflow-hidden border border-white/10 cursor-pointer hover:border-blue-400 hover:shadow-[0_0_15px_rgba(59,130,246,0.3)] transition-all duration-300 group/img relative" (click)="openLightbox(url)">
+                              <div class="absolute inset-0 bg-blue-500/20 opacity-0 group-hover/img:opacity-100 transition-opacity z-10"></div>
+                              <img [src]="url" alt="Evidencia" class="w-full h-full object-cover group-hover/img:scale-110 transition-transform duration-500" loading="lazy">
                             </div>
                           }
                         </div>
@@ -189,48 +209,62 @@ import { ChatComponent } from '../chat/chat.component';
                     }
 
                     <!-- Action: Ofrecer Cotización y Chat -->
-                    <div class="mt-5 pt-4 border-t border-gray-100 flex justify-end gap-3">
+                    <div class="mt-6 pt-5 border-t border-white/10 flex justify-end gap-3">
                       <button 
                         (click)="abrirChat(inc)"
-                        class="px-5 py-2.5 rounded-xl font-semibold text-sm transition-all duration-300 transform shadow-sm border border-gray-200 bg-white text-gray-700 hover:bg-gray-50 flex items-center gap-2">
+                        class="px-5 py-2.5 rounded-xl font-semibold text-sm transition-all duration-300 border border-white/10 bg-white/5 text-gray-200 hover:bg-white/10 hover:shadow-[0_0_15px_rgba(255,255,255,0.05)] flex items-center gap-2">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-4 h-4">
                           <path stroke-linecap="round" stroke-linejoin="round" d="M8.625 9.75a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0H8.25m4.125 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0H12m4.125 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0h-.375m-13.5 3.01c0 1.6 1.123 2.994 2.707 3.227 1.129.166 2.27.293 3.423.379.35.026.67.21.865.501L12 21l2.755-4.133a1.14 1.14 0 01.865-.501 48.172 48.172 0 003.423-.379c1.584-.233 2.707-1.626 2.707-3.228V6.741c0-1.602-1.123-2.995-2.707-3.228A48.394 48.394 0 0012 3c-2.392 0-4.744.175-7.043.513C3.373 3.746 2.25 5.14 2.25 6.741v6.018z" />
                         </svg>
                         Negociar
                       </button>
-                      <button 
-                        (click)="ofrecerCotizacion(inc)" 
-                        [disabled]="isAssigning === inc.id || yaCotizado(inc)"
-                        [class.from-emerald-600]="yaCotizado(inc)"
-                        [class.to-teal-600]="yaCotizado(inc)"
-                        class="px-5 py-2.5 rounded-xl font-semibold text-sm transition-all duration-300 transform shadow-md bg-gradient-to-r from-blue-600 to-indigo-600 text-white hover:scale-105 disabled:opacity-50 disabled:hover:scale-100 flex items-center gap-2">
-                        @if (isAssigning === inc.id) {
-                          <div class="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
-                          Procesando...
-                        } @else if (yaCotizado(inc)) {
-                          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-4 h-4">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                          </svg>
-                          Oferta Enviada
-                        } @else {
-                          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-4 h-4">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M11.42 15.17L17.25 21A2.652 2.652 0 0021 17.25l-5.877-5.877M11.42 15.17l2.496-3.03c.317-.384.74-.626 1.208-.766M11.42 15.17l-4.655 5.653a2.548 2.548 0 11-3.586-3.586l6.837-5.63m5.108-.233c.55-.164 1.163-.188 1.743-.14a4.5 4.5 0 004.486-6.336l-3.276 3.277a3.004 3.004 0 01-2.25-2.25l3.276-3.276a4.5 4.5 0 00-6.336 4.486c.091 1.076-.071 2.264-.904 2.95l-.102.085" />
-                          </svg>
-                          Ofrecer Servicio
+                      @if (tallerId) {
+                        @if (esCotizacionSolicitadaDirecta(inc)) {
+                          <button 
+                            (click)="rechazarCotizacion(inc)"
+                            [disabled]="isAssigning === inc.id"
+                            class="px-5 py-2.5 rounded-xl font-bold text-sm transition-all duration-300 transform border border-red-500/50 text-red-400 bg-red-500/10 hover:bg-red-500/20 hover:shadow-[0_0_15px_rgba(239,68,68,0.2)] disabled:opacity-50 flex items-center gap-2">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-4 h-4">
+                              <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                            Rechazar
+                          </button>
                         }
-                      </button>
+
+                        <button 
+                          (click)="ofrecerCotizacion(inc)" 
+                          [disabled]="isAssigning === inc.id || yaCotizado(inc)"
+                          [class.from-emerald-600]="yaCotizado(inc)"
+                          [class.to-teal-500]="yaCotizado(inc)"
+                          class="px-5 py-2.5 rounded-xl font-bold text-sm transition-all duration-300 transform shadow-[0_0_15px_rgba(37,99,235,0.4)] bg-gradient-to-r from-blue-600 to-indigo-600 text-white hover:shadow-[0_0_25px_rgba(37,99,235,0.6)] hover:scale-105 disabled:opacity-50 disabled:hover:scale-100 flex items-center gap-2">
+                          @if (isAssigning === inc.id) {
+                            <div class="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+                            Procesando...
+                          } @else if (yaCotizado(inc)) {
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-4 h-4 drop-shadow">
+                              <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                            Oferta Enviada
+                          } @else {
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-4 h-4 drop-shadow">
+                              <path stroke-linecap="round" stroke-linejoin="round" d="M11.42 15.17L17.25 21A2.652 2.652 0 0021 17.25l-5.877-5.877M11.42 15.17l2.496-3.03c.317-.384.74-.626 1.208-.766M11.42 15.17l-4.655 5.653a2.548 2.548 0 11-3.586-3.586l6.837-5.63m5.108-.233c.55-.164 1.163-.188 1.743-.14a4.5 4.5 0 004.486-6.336l-3.276 3.277a3.004 3.004 0 01-2.25-2.25l3.276-3.276a4.5 4.5 0 00-6.336 4.486c.091 1.076-.071 2.264-.904 2.95l-.102.085" />
+                            </svg>
+                            Ofrecer Servicio
+                          }
+                        </button>
+                      }
                     </div>
                   </div>
                 </div>
               } @empty {
-                <div class="py-20 text-center">
-                  <div class="w-20 h-20 mx-auto mb-6 bg-gray-100 rounded-full flex items-center justify-center">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1" stroke="currentColor" class="w-10 h-10 text-gray-300">
+                <div class="py-24 text-center">
+                  <div class="w-24 h-24 mx-auto mb-6 bg-white/5 border border-white/10 rounded-full flex items-center justify-center shadow-[0_0_30px_rgba(0,0,0,0.3)]">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1" stroke="currentColor" class="w-12 h-12 text-blue-300/40">
                       <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                     </svg>
                   </div>
-                  <h3 class="text-gray-700 font-bold text-lg">No hay solicitudes pendientes</h3>
-                  <p class="text-gray-400 text-sm mt-2">Todas las emergencias tienen un taller asignado. Vuelve más tarde.</p>
+                  <h3 class="text-white font-bold text-xl tracking-tight">No hay solicitudes pendientes</h3>
+                  <p class="text-blue-200/60 text-sm mt-3 max-w-md mx-auto">Todas las emergencias tienen un taller asignado actualmente. Vuelve más tarde cuando hayan nuevos incidentes.</p>
                 </div>
               }
             </div>
@@ -239,9 +273,9 @@ import { ChatComponent } from '../chat/chat.component';
 
         <!-- Stats footer -->
         @if (!isLoading && solicitudes.length > 0) {
-          <div class="px-6 py-4 border-t border-gray-100 bg-gray-50 rounded-b-2xl">
-            <p class="text-sm text-gray-500">
-              <span class="font-bold text-gray-900">{{ solicitudes.length }}</span> solicitud(es) pendiente(s) de atención
+          <div class="mt-6 flex items-center justify-between border-t border-white/10 pt-4">
+            <p class="text-sm text-blue-200/60">
+              <span class="font-bold text-white">{{ solicitudes.length }}</span> solicitud(es) disponible(s)
             </p>
           </div>
         }
@@ -250,80 +284,90 @@ import { ChatComponent } from '../chat/chat.component';
 
     <!-- Modal de Confirmación -->
     @if (isModalOpen) {
-      <div class="fixed inset-0 flex items-center justify-center p-4" style="z-index: 10000">
-        <div class="absolute inset-0 bg-gray-900/40 backdrop-blur-sm transition-opacity" (click)="closeModal()"></div>
+      <div class="fixed inset-0 flex items-center justify-center p-4 sm:p-6" style="z-index: 10000">
+        <div class="absolute inset-0 bg-[#0b1120]/80 backdrop-blur-md transition-opacity" (click)="closeModal()"></div>
         
-        <div class="relative w-full max-w-lg bg-white border border-gray-100 rounded-2xl shadow-[0_20px_60px_rgba(0,0,0,0.1)] overflow-hidden" style="z-index: 10001">
+        <div class="relative w-full max-w-lg bg-[#1e293b] border border-white/10 rounded-2xl shadow-[0_0_50px_rgba(0,0,0,0.6)] overflow-hidden flex flex-col max-h-full" style="z-index: 10001">
           <!-- Modal Map -->
           @if (selectedIncidente?.coordenadagps) {
-            <div id="modal-map" class="h-[200px] w-full"></div>
+            <div id="modal-map" class="h-[200px] w-full brightness-90 contrast-125 saturate-50 shrink-0 border-b border-white/10"></div>
           }
           
-          <div class="p-6">
-            <h2 class="text-xl font-bold text-gray-900 mb-2">Confirmar Asistencia</h2>
-            <p class="text-gray-500 text-sm mb-4">
+          <div class="p-6 md:p-8 overflow-y-auto">
+            <h2 class="text-2xl font-extrabold text-white mb-2 drop-shadow">Confirmar Asistencia</h2>
+            <p class="text-blue-100/70 text-sm mb-6 leading-relaxed">
               ¿Deseas ofrecer tu servicio para el <strong>Incidente #{{ selectedIncidente?.id }}</strong>? 
-              Se te asignará como taller responsable de esta emergencia.
+              Envía tu propuesta de precio y tiempo estimado al conductor.
             </p>
             
             @if (selectedIncidente?.coordenadagps) {
-              <div class="bg-blue-50 rounded-xl px-4 py-2.5 mb-4 flex items-center gap-3">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4 text-blue-500">
+              <div class="bg-blue-500/10 border border-blue-500/20 rounded-xl px-4 py-3 mb-6 flex items-center gap-3">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5 text-blue-400 shrink-0 drop-shadow">
                   <path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z" />
                   <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z" />
                 </svg>
-                <span class="text-sm text-blue-700 font-mono">{{ selectedIncidente?.coordenadagps }}</span>
+                <span class="text-sm text-blue-300 font-mono tracking-wider">{{ selectedIncidente?.coordenadagps }}</span>
               </div>
             }
 
-            <div class="space-y-4 mb-6">
+            <div class="space-y-5 mb-8">
               <div>
-                <label class="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-1.5">Monto Aproximado (BOB)</label>
+                <label class="block text-xs font-bold text-blue-200/50 uppercase tracking-widest mb-2">Monto Oferta (BOB)</label>
                 <div class="relative">
-                  <span class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 font-semibold">Bs.</span>
+                  <span class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 font-bold">Bs.</span>
                   <input 
                     type="number" 
                     [(ngModel)]="montoOferta" 
                     placeholder="0.00"
-                    class="w-full pl-12 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all font-semibold text-gray-700"
+                    class="w-full pl-12 pr-4 py-3 bg-[#0f172a] border border-white/10 rounded-xl focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500/50 outline-none transition-all font-bold text-white placeholder-gray-600 shadow-[inset_0_2px_4px_rgba(0,0,0,0.3)]"
                   >
                 </div>
               </div>
               
               <div>
-                <label class="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-1.5">Tiempo Estimado (Opcional)</label>
+                <label class="block text-xs font-bold text-blue-200/50 uppercase tracking-widest mb-2">Tiempo Estimado</label>
                 <input 
                   type="text" 
                   [(ngModel)]="tiempoEstimadoOferta" 
-                  placeholder="Ej: 2 horas, 1 día..."
-                  class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all font-semibold text-gray-700 mb-4"
+                  placeholder="Ej: 30 minutos, 2 horas..."
+                  class="w-full px-4 py-3 bg-[#0f172a] border border-white/10 rounded-xl focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500/50 outline-none transition-all font-semibold text-white placeholder-gray-600 shadow-[inset_0_2px_4px_rgba(0,0,0,0.3)]"
                 >
               </div>
               
               <div>
-                <label class="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-1.5">Mensaje o Detalle (Opcional)</label>
+                <label class="block text-xs font-bold text-blue-200/50 uppercase tracking-widest mb-2">Mensaje Adicional</label>
                 <textarea 
                   [(ngModel)]="mensajeOferta" 
-                  placeholder="Ej: Incluye remolque y diagnóstico inicial..."
+                  placeholder="Ej: Incluye remolque y revisión con escáner..."
                   rows="3"
-                  class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all text-sm text-gray-700"
+                  class="w-full px-4 py-3 bg-[#0f172a] border border-white/10 rounded-xl focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500/50 outline-none transition-all text-sm text-white placeholder-gray-600 shadow-[inset_0_2px_4px_rgba(0,0,0,0.3)] resize-none"
                 ></textarea>
               </div>
             </div>
 
             @if (modalError) {
-              <div class="mb-4 bg-red-50 text-red-600 px-3 py-2 rounded-lg text-sm border border-red-100">{{ modalError }}</div>
+              <div class="mb-6 bg-red-500/10 border border-red-500/30 text-red-400 px-4 py-3 rounded-xl text-sm flex items-center gap-2">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-4 h-4 shrink-0">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                </svg>
+                {{ modalError }}
+              </div>
             }
 
-            <div class="flex justify-end gap-3">
-              <button type="button" (click)="closeModal()" class="px-5 py-2.5 rounded-xl text-gray-600 hover:bg-gray-100 transition-colors font-medium">Cancelar</button>
+            <div class="flex flex-col-reverse sm:flex-row sm:justify-end gap-3 mt-4">
+              <button type="button" (click)="closeModal()" class="w-full sm:w-auto px-6 py-3 rounded-xl text-gray-300 hover:bg-white/5 border border-transparent hover:border-white/10 transition-all font-medium text-sm">Cancelar</button>
               <button 
                 (click)="confirmarAsignacion()" 
                 [disabled]="isAssigning || yaCotizado(selectedIncidente!)"
                 [class.from-emerald-600]="yaCotizado(selectedIncidente!)"
-                [class.to-teal-600]="yaCotizado(selectedIncidente!)"
-                class="px-5 py-2.5 rounded-xl font-semibold text-sm transition-all duration-300 transform shadow-md bg-gradient-to-r from-blue-600 to-indigo-600 text-white hover:scale-105 disabled:opacity-50 disabled:hover:scale-100 flex items-center gap-2">
-                @if (isAssigning) { Procesando... } @else { Confirmar Servicio }
+                [class.to-teal-500]="yaCotizado(selectedIncidente!)"
+                class="w-full sm:w-auto px-6 py-3 rounded-xl font-bold text-sm transition-all duration-300 shadow-[0_0_15px_rgba(37,99,235,0.4)] bg-gradient-to-r from-blue-600 to-indigo-600 text-white hover:shadow-[0_0_25px_rgba(37,99,235,0.6)] hover:scale-105 disabled:opacity-50 disabled:hover:scale-100 flex items-center justify-center gap-2">
+                @if (isAssigning) { 
+                  <div class="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+                  Procesando... 
+                } @else { 
+                  Confirmar Servicio 
+                }
               </button>
             </div>
           </div>
@@ -333,13 +377,13 @@ import { ChatComponent } from '../chat/chat.component';
 
     <!-- Lightbox -->
     @if (lightboxUrl) {
-      <div class="fixed inset-0 flex items-center justify-center p-4 bg-black/80" style="z-index: 20000" (click)="closeLightbox()">
-        <button class="absolute top-4 right-4 text-white hover:text-gray-300 transition-colors" (click)="closeLightbox()">
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-8 h-8">
+      <div class="fixed inset-0 flex items-center justify-center p-4 bg-[#0b1120]/90 backdrop-blur-sm" style="z-index: 20000" (click)="closeLightbox()">
+        <button class="absolute top-6 right-6 text-white hover:text-red-400 transition-colors drop-shadow" (click)="closeLightbox()">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-10 h-10">
             <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
           </svg>
         </button>
-        <img [src]="lightboxUrl" alt="Evidencia" class="max-w-full max-h-[90vh] rounded-xl shadow-2xl object-contain" (click)="$event.stopPropagation()">
+        <img [src]="lightboxUrl" alt="Evidencia" class="max-w-full max-h-[90vh] rounded-2xl shadow-[0_0_50px_rgba(0,0,0,0.8)] object-contain border border-white/10" (click)="$event.stopPropagation()">
       </div>
     }
     
@@ -347,7 +391,7 @@ import { ChatComponent } from '../chat/chat.component';
     @if (incidenteChatSeleccionado) {
       <app-chat [incidenteId]="incidenteChatSeleccionado" (close)="cerrarChat()"></app-chat>
     }
-  `,
+  `, 
   styles: [`
     @keyframes spin {
       to { transform: rotate(360deg); }
@@ -588,7 +632,15 @@ export class SolicitudesPendientesComponent implements OnInit, OnDestroy, AfterV
 
     this.incidenteService.getSolicitudesPendientes().subscribe({
       next: (data) => {
-        this.solicitudes = data;
+        // Filtrar aquellos incidentes en los que el taller actual ya haya rechazado la cotización
+        if (this.tallerId) {
+          this.solicitudes = data.filter(inc => {
+            const rejected = inc.cotizaciones?.some(c => c.taller_id === this.tallerId && c.estado === 'Rechazada');
+            return !rejected;
+          });
+        } else {
+          this.solicitudes = data;
+        }
         this.isLoading = false;
       },
       error: (e) => {
@@ -697,9 +749,30 @@ export class SolicitudesPendientesComponent implements OnInit, OnDestroy, AfterV
     });
   }
 
+  rechazarCotizacion(inc: IncidenteDetalle) {
+    if (confirm('¿Estás seguro de que deseas rechazar esta solicitud de cotización? El incidente desaparecerá de tu lista.')) {
+      this.isAssigning = inc.id;
+      this.incidenteService.rechazarCotizacion(inc.id).subscribe({
+        next: () => {
+          this.isAssigning = null;
+          this.solicitudes = this.solicitudes.filter(s => s.id !== inc.id);
+        },
+        error: (err) => {
+          this.isAssigning = null;
+          this.errorMessage = 'Error al rechazar cotización: ' + (err.error?.detail || err.message);
+        }
+      });
+    }
+  }
+
   yaCotizado(inc: IncidenteDetalle): boolean {
     if (!inc.cotizaciones || !this.tallerId) return false;
-    return inc.cotizaciones.some(c => c.taller_id === this.tallerId && c.estado !== 'Rechazada');
+    return inc.cotizaciones.some(c => c.taller_id === this.tallerId && c.estado !== 'Rechazada' && c.estado !== 'Solicitada');
+  }
+
+  esCotizacionSolicitadaDirecta(inc: IncidenteDetalle): boolean {
+    if (!inc.cotizaciones || !this.tallerId) return false;
+    return inc.cotizaciones.some(c => c.taller_id === this.tallerId && c.estado === 'Solicitada');
   }
 
   private fetchRoute(from: [number, number], to: [number, number], map: L.Map) {

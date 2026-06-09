@@ -23,6 +23,7 @@ import { PlanesComponent } from './features/saas/planes/planes';
 import { MiSuscripcionComponent } from './features/saas/mi-suscripcion/mi-suscripcion';
 import { DashboardKpiComponent } from './features/analytics/dashboard-kpi/dashboard-kpi';
 import { TalleresListComponent } from './features/talleres/talleres-list.component';
+import { ChatsComponent } from './features/chats/chats.component';
 
 export const routes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -40,6 +41,7 @@ export const routes: Routes = [
       { path: 'mecanicos', component: MecanicosListComponent, data: { requiredPermiso: 'Gestionar Mecanicos' } },
       { path: 'bitacora', component: BitacoraListComponent, data: { requiredPermiso: 'Ver Bitacora' } },
       { path: 'perfil', component: PerfilComponent },
+      { path: 'chats', component: ChatsComponent },
       { path: 'solicitudes-pendientes', component: SolicitudesPendientesComponent, data: { requiredPermiso: 'Ver Operaciones' } },
       { path: 'mantenimientos', component: MantenimientosComponent, data: { requiredPermiso: 'Ver Operaciones' } },
       { path: 'mis-incidentes', component: MisIncidentes },

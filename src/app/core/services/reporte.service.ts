@@ -22,13 +22,15 @@ export class ReporteService {
   private http = inject(HttpClient);
   private apiUrl = `${environment.apiUrl}/reportes`;
 
-  getStatsTaller(): Observable<ReporteStats> {
-    return this.http.get<ReporteStats>(`${this.apiUrl}/taller/stats`);
+  getStatsTaller(tallerId?: number): Observable<ReporteStats> {
+    let url = `${this.apiUrl}/taller/stats`;
+    if (tallerId) url += `?taller_id=${tallerId}`;
+    return this.http.get<ReporteStats>(url);
   }
 
-  exportar(formato: string) {
-    const url = `${this.apiUrl}/taller/export/${formato}`;
-    const token = localStorage.getItem('token');
+  exportar(formato: string, tallerId?: number) {
+    let url = `${this.apiUrl}/taller/export/${formato}`;
+    if (tallerId) url += `?taller_id=${tallerId}`;
     
     // Usamos window.open para la descarga directa con el token en la URL o un link temporal
     // Pero dado que requiere Auth Bearer, es mejor usar HttpClient con blob
