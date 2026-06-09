@@ -18,7 +18,7 @@ RUN rm /etc/nginx/conf.d/default.conf
 COPY --from=build /app/dist/emergencia-vehicular/browser /usr/share/nginx/html
 
 RUN echo 'server { \
-    listen 80; \
+    listen 3000; \
     server_name _; \
     root /usr/share/nginx/html; \
     index index.html; \
@@ -31,6 +31,6 @@ RUN echo 'server { \
     } \
 }' > /etc/nginx/conf.d/default.conf
 
-EXPOSE 80
+EXPOSE 3000
 
 CMD ["nginx", "-g", "daemon off;"]
