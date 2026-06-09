@@ -117,7 +117,16 @@ export class LoginComponent {
       this.router.navigate(['/dashboard']);
     } else {
       this.error = 'Acceso denegado. Los conductores deben ingresar mediante la aplicación móvil.';
-      this.authService.logout();
+      // We do not call this.authService.logout() here because it calls router.navigate(['/login']) 
+      // which can refresh the component and wipe this error message.
+      // We manually clean the storage so the user remains logged out but sees the message.
+      localStorage.removeItem('access_token');
+      localStorage.removeItem('role');
+      localStorage.removeItem('permisos');
+      localStorage.removeItem('tenant_id');
+      this.authService['currentUserRoleSubject'].next(null);
+      this.authService['currentPermisosSubject'].next([]);
+      this.authService['currentTenantSubject'].next(null);
     }
   }
 
