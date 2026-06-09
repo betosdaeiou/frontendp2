@@ -98,8 +98,8 @@
                 </div>
               </div>
 
-              <!-- Asignación de Mecánicos (Solo Taller) -->
-              @if (role === 'Taller') {
+              <!-- Asignación de Mecánicos (Taller y Admin Tenant) -->
+              @if (role === 'Taller' || role === 'Admin Tenant') {
                 <div class="relative z-10 bg-white/5 border border-white/10 rounded-2xl p-5 backdrop-blur-sm">
                   <div class="flex justify-between items-center mb-3">
                     <label class="block text-xs font-bold text-white/60 uppercase tracking-wider">Técnicos Asignados</label>
@@ -108,7 +108,7 @@
                     </button>
                   </div>
                   <div class="flex flex-wrap gap-2">
-                    @for (mec of mecanicosDisponibles; track mec.id) {
+                    @for (mec of getMecanicosPorTaller(m.taller_id); track mec.id) {
                       <label class="cursor-pointer relative">
                         <input type="checkbox" class="peer sr-only" 
                                [checked]="asignacionesPendientes[m.id].includes(mec.id)"
@@ -120,7 +120,7 @@
                         </div>
                       </label>
                     }
-                    @if (mecanicosDisponibles.length === 0) {
+                    @if (getMecanicosPorTaller(m.taller_id).length === 0) {
                       <span class="text-xs text-white/30 italic">No hay técnicos disponibles</span>
                     }
                   </div>

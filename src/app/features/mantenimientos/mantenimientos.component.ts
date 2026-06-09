@@ -177,10 +177,15 @@ export class MantenimientosComponent implements OnInit, OnDestroy, AfterViewChec
   cargarMecanicosDisponibles(): void {
     this.mecanicoService.getMecanicos().subscribe({
       next: (data) => {
-        this.mecanicosDisponibles = data.filter(m => m.estado === 'Disponible');
+        this.mecanicosDisponibles = data.filter(m => m.estado?.toLowerCase() === 'disponible');
       },
       error: (err) => console.error('Error al cargar mecánicos:', err)
     });
+  }
+
+  getMecanicosPorTaller(tallerId: number | undefined): Mecanico[] {
+    if (!tallerId) return [];
+    return this.mecanicosDisponibles.filter(m => m.taller_id === tallerId);
   }
 
   toggleMecanicoSeleccion(incidenteId: number, mecanicoId: number, event: any) {
