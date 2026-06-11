@@ -1,8 +1,4 @@
 
-<div *ngIf="!offlineSync.isOnline" class="bg-red-500 text-white text-center py-2 font-semibold z-[9999] relative">
-  Estás sin conexión. Los cambios se guardarán localmente y se sincronizarán cuando regrese el internet.
-</div>
-
 <!-- Global Toast Notification -->
 <div *ngIf="toastMessage()" class="fixed top-4 right-4 z-[9999] animate-fade-in-down">
   <div class="bg-blue-600 text-white px-6 py-4 rounded-xl shadow-2xl flex items-center gap-3 border border-blue-400/30 backdrop-blur-md">

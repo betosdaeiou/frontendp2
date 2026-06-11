@@ -641,6 +641,10 @@ export class SolicitudesPendientesComponent implements OnInit, OnDestroy, AfterV
         } else {
           this.solicitudes = data;
         }
+        
+        // Ordenar por número de incidente (ID descendente)
+        this.solicitudes.sort((a, b) => b.id - a.id);
+
         this.isLoading = false;
       },
       error: (e) => {
