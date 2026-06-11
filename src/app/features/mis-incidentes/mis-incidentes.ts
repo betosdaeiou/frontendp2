@@ -3,7 +3,8 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { IncidenteService, IncidenteDetalle, Cotizacion } from '../../core/services/incidente.service';
 import { PagoService } from '../../core/services/pago.service';
-import { WsService } from '../../core/services/ws.service';
+import { WebsocketService } from '../../core/services/websocket.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-mis-incidentes',
@@ -15,7 +16,8 @@ import { WsService } from '../../core/services/ws.service';
 export class MisIncidentes implements OnInit, OnDestroy {
   private incidenteService = inject(IncidenteService);
   private pagoService = inject(PagoService);
-  private ws = inject(WsService);
+  private websocketService = inject(WebsocketService);
+  private wsSubscription?: Subscription;
 
   incidentes: IncidenteDetalle[] = [];
   isLoading = true;
@@ -27,15 +29,21 @@ export class MisIncidentes implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.cargarIncidentes();
-    this.ws.onMessage().subscribe(msg => {
-      if (msg.action === 'nuevo_incidente' || msg.action === 'estado_actualizado' || msg.action === 'taller_asignado') {
+    
+    // Conectar a sala general
+    this.websocketService.connect('talleres');
+
+    this.wsSubscription = this.websocketService.messages$.subscribe(msg => {
+      if (msg && (msg.action === 'nuevo_incidente' || msg.action === 'estado_actualizado' || msg.action === 'taller_asignado')) {
         this.cargarIncidentes();
       }
     });
   }
 
   ngOnDestroy() {
-    // La conexion WS la maneja WsService globalmente, no necesitamos cerrarla aquí a menos que sea necesario
+    if (this.wsSubscription) {
+      this.wsSubscription.unsubscribe();
+    }
   }
 
   cargarIncidentes() {
