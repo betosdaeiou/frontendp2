@@ -243,9 +243,8 @@ export class MecanicosListComponent implements OnInit {
       // Transformar integer epoch a formato de cadena YYYY-MM-DD
       let dateString = null;
       if (meca.fechanac) {
-         // Asumiendo que guardamos en milisegundos. (Si es en segundos: meca.fechanac * 1000)
-         // Para simplificar la fecha local del input
-         const isoStr = new Date(meca.fechanac).toISOString();
+         const fechanacVal = typeof meca.fechanac === 'string' ? new Date(meca.fechanac).getTime() : meca.fechanac;
+         const isoStr = new Date(Number(fechanacVal)).toISOString();
          dateString = isoStr.split('T')[0];
       }
 
@@ -279,23 +278,17 @@ export class MecanicosListComponent implements OnInit {
 
     const payload = this.form.value;
 
-    let fechanac_epoch: number | undefined = undefined;
-    if (payload.fechanac_string) {
-       // Convertimos el YYYY-MM-DD del date picker devuelta a milisegundos Integer
-       fechanac_epoch = new Date(payload.fechanac_string).getTime();
-    }
-
     const request = this.isEditing && this.editingId
       ? this.mecanicoService.updateMecanico(this.editingId, {
           nombre: payload.nombre,
           apellidos: payload.apellidos,
           ci: payload.ci,
           extci: payload.extci,
-          fechanac: fechanac_epoch
+          fechanac: payload.fechanac_string
         })
       : this.mecanicoService.createMecanico({
           ...payload,
-          fechanac: fechanac_epoch
+          fechanac: payload.fechanac_string
       });
 
     request.subscribe({

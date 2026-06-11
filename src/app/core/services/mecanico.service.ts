@@ -9,7 +9,7 @@ export interface Mecanico {
   extci?: string;
   nombre: string;
   apellidos: string;
-  fechanac?: number;
+  fechanac?: string;
   taller_id?: number;
   taller_nombre?: string;
   estado?: string;
@@ -22,7 +22,7 @@ export interface MecanicoRegistro {
   extci?: string;
   nombre: string;
   apellidos: string;
-  fechanac?: number;
+  fechanac?: string;
 }
 
 export interface MecanicoUpdate {
@@ -30,7 +30,7 @@ export interface MecanicoUpdate {
   extci?: string;
   nombre?: string;
   apellidos?: string;
-  fechanac?: number;
+  fechanac?: string;
   estado?: string;
 }
 

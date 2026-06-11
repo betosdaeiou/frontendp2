@@ -1,8 +1,9 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, OnDestroy, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { IncidenteService, IncidenteDetalle, Cotizacion } from '../../core/services/incidente.service';
 import { PagoService } from '../../core/services/pago.service';
+import { WsService } from '../../core/services/ws.service';
 
 @Component({
   selector: 'app-mis-incidentes',
@@ -11,9 +12,10 @@ import { PagoService } from '../../core/services/pago.service';
   templateUrl: './mis-incidentes.html',
   styleUrl: './mis-incidentes.css'
 })
-export class MisIncidentes implements OnInit {
+export class MisIncidentes implements OnInit, OnDestroy {
   private incidenteService = inject(IncidenteService);
   private pagoService = inject(PagoService);
+  private ws = inject(WsService);
 
   incidentes: IncidenteDetalle[] = [];
   isLoading = true;
@@ -25,6 +27,15 @@ export class MisIncidentes implements OnInit {
 
   ngOnInit() {
     this.cargarIncidentes();
+    this.ws.onMessage().subscribe(msg => {
+      if (msg.action === 'nuevo_incidente' || msg.action === 'estado_actualizado' || msg.action === 'taller_asignado') {
+        this.cargarIncidentes();
+      }
+    });
+  }
+
+  ngOnDestroy() {
+    // La conexion WS la maneja WsService globalmente, no necesitamos cerrarla aquí a menos que sea necesario
   }
 
   cargarIncidentes() {
